@@ -1,328 +1,462 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAviation - Havacılık Dünyası</title>
-    <!-- Tailwind CSS (Aydınlık Tema Öncelikli) -->
+    <title>EAviation | Ultra Premium GeoFS Flight Simulation Ecosystem</title>
+    <!-- Google Fonts & Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome İkonları -->
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .smooth-transition { transition: all 0.3s ease; }
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        /* Dinamik Tema Geçiş Yumuşaklığı */
+        .theme-transition {
+            transition: background-color 0.5s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        /* Koyu Mod Cam Efekti */
+        .dark-mode .apple-glass {
+            background: rgba(22, 22, 23, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Açık Mod Cam Efekti */
+        .light-mode .apple-glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        /* Kartların Üzerine Gelindiğinde Parlama */
+        .dark-mode .apple-card-glow:hover {
+            border-color: rgba(0, 113, 227, 0.4);
+            box-shadow: 0 0 30px rgba(0, 113, 227, 0.15);
+        }
+        .light-mode .apple-card-glow:hover {
+            border-color: rgba(0, 113, 227, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 113, 227, 0.08);
+        }
+        /* Radar Animasyonu */
+        @keyframes radar-sweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .radar-line {
+            animation: radar-sweep 4s linear infinite;
+            transform-origin: bottom right;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased">
+<body id="themeBody" class="dark-mode bg-black text-[#f5f5f7] antialiased selection:bg-blue-600 selection:text-white theme-transition">
 
-    <!-- 1. ÜST NAVİGASYON VE DİL SEÇİMİ -->
-    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 smooth-transition">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <!-- Arka Plan Efekt Işımaları (Koyu Modda görünür) -->
+    <div id="glow1" class="absolute width-[700px] height-[700px] bg-[radial-gradient(circle,rgba(0,113,227,0.12)_0%,rgba(0,0,0,0)_70%)] top-[-150px] left-1/2 -translate-x-1/2 z-0 pointer-events-none opacity-100 theme-transition"></div>
+
+    <!-- 1. ÜST NAVİGASYON BAR -->
+    <nav class="fixed top-0 w-full z-50 apple-glass border-b theme-transition">
+        <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between text-xs tracking-wider">
+            <a href="#" class="font-bold tracking-tight flex items-center gap-2 id-nav-logo text-current">
+                <i class="fa-solid fa-jet-fighter text-base text-blue-500"></i> EAviation <span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500 bg-opacity-10 text-blue-500 font-mono">GEOFS</span>
+            </a>
             
-            <!-- Logo Alanı -->
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-200">
-                    EA
-                </div>
-                <div>
-                    <span class="text-xl font-bold text-slate-900 tracking-tight block">EAviation</span>
-                    <span class="text-xs text-blue-600 font-medium tracking-widest uppercase" id="nav-subtitle">Havacılık Dünyası</span>
-                </div>
+            <div class="hidden md:flex space-x-8 font-light id-nav-links text-gray-400">
+                <a href="#home" id="menu-home" class="hover:text-blue-500 theme-transition">Hangar</a>
+                <a href="#fleet" id="menu-fleet" class="hover:text-blue-500 theme-transition">Sanal Filo</a>
+                <a href="#videos" id="menu-videos" class="hover:text-blue-500 theme-transition">Uçuş Kayıtları</a>
+                <a href="#specs" id="menu-specs" class="hover:text-blue-500 theme-transition">Sistem</a>
             </div>
-
-            <!-- Sağ Menü: Navigasyon ve Dil Seçici -->
-            <div class="flex items-center gap-6">
-                <nav class="hidden md:flex items-center gap-6 font-medium text-slate-600">
-                    <a href="#hero" id="menu-home" class="hover:text-blue-600 smooth-transition">Ana Sayfa</a>
-                    <a href="#videos" id="menu-videos" class="hover:text-blue-600 smooth-transition">Videolar</a>
-                    <a href="https://www.youtube.com/@EAviation12" target="_blank" id="menu-channel" class="hover:text-blue-600 smooth-transition">YouTube Kanalı</a>
-                </nav>
+            
+            <!-- Sağ Taraf: Temalar, Diller ve Linkler -->
+            <div class="flex items-center gap-3">
+                <!-- AYDINLIK / KOYU MOD DEĞİŞTİRME BUTONU -->
+                <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-white bg-opacity-5 border border-white border-opacity-10 flex items-center justify-center text-sm text-current hover:bg-opacity-10 theme-transition" title="Temayı Değiştir">
+                    <i id="themeIcon" class="fa-solid fa-sun text-yellow-400"></i>
+                </button>
 
                 <!-- 5 Dilli Seçim Kutusu -->
-                <div class="relative inline-block text-left">
-                    <div class="flex items-center gap-2 bg-slate-100 px-3 py-2 rounded-lg border border-slate-200">
-                        <i class="fa-solid fa-earth-americas text-slate-500 text-sm"></i>
-                        <select id="languageSelector" onchange="changeLanguage(this.value)" class="bg-transparent text-sm font-semibold text-slate-700 focus:outline-none cursor-pointer">
-                            <option value="tr">TR - Türkçe</option>
-                            <option value="az">AZ - Azərbaycan</option>
-                            <option value="en">EN - English</option>
-                            <option value="ru">RU - Русский</option>
-                            <option value="de">DE - Deutsch</option>
-                        </select>
-                    </div>
+                <div class="bg-white bg-opacity-5 border border-white border-opacity-10 px-2 py-1 rounded-md text-[11px] theme-transition">
+                    <i class="fa-solid fa-earth-americas text-blue-500 mr-1"></i>
+                    <select id="languageSelector" onchange="changeLanguage(this.value)" class="bg-transparent focus:outline-none cursor-pointer font-medium text-current">
+                        <option value="tr" class="text-black">TR</option>
+                        <option value="az" class="text-black">AZ</option>
+                        <option value="en" class="text-black">EN</option>
+                        <option value="ru" class="text-black">RU</option>
+                        <option value="de" class="text-black">DE</option>
+                    </select>
                 </div>
+                
+                <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="bg-blue-600 text-white px-3 py-1 rounded-full text-[11px] font-medium hover:bg-blue-500 theme-transition shadow-lg flex items-center gap-1">
+                    <i class="fa-brands fa-youtube"></i> <span id="btn-top-sub">Takip Et</span>
+                </a>
             </div>
-
         </div>
-    </header>
+    </nav>
 
-    <!-- 2. HERO ANASAYFA ALANI -->
-    <section id="hero" class="relative overflow-hidden bg-gradient-to-b from-blue-50 via-white to-slate-50 py-20 lg:py-32">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
-            <!-- Yazı İçeriği -->
-            <div class="space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider" id="hero-badge">
-                    <i class="fa-solid fa-plane-departure"></i> Yeni Nesil Havacılık Medyası
-                </div>
-                <h1 id="hero-title" class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                    Gökyüzünün En Net <span class="text-blue-600">Kokpit Hikayeleri</span>
-                </h1>
-                <p id="hero-desc" class="text-lg text-slate-600 max-w-xl mx-auto lg:mx-0">
-                    Boeing devlerinden Airbus teknolojilerine, havalimanlarındaki spotter anlarından uçuş simülasyonlarına kadar aradığınız her şey burada. YouTube sunucumuzla tam senkronize.
-                </p>
-                <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
-                    <a href="https://www.youtube.com/@EAviation12?sub_confirmation=1" target="_blank" id="btn-subscribe" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg shadow-red-200 smooth-transition flex items-center gap-2">
-                        <i class="fa-brands fa-youtube text-lg"></i> Abone Ol
-                    </a>
-                    <a href="#videos" id="btn-explore" class="bg-white hover:bg-slate-50 text-slate-800 font-semibold px-8 py-4 rounded-xl border border-slate-200 shadow-sm smooth-transition flex items-center gap-2">
-                        Videoları Keşfet <i class="fa-solid fa-arrow-down"></i>
-                    </a>
-                </div>
-            </div>
+    <!-- 2. HERO SECTION -->
+    <section id="home" class="relative pt-40 pb-24 px-6 max-w-5xl mx-auto text-center z-10">
+        <!-- Kanal Profil Yuvası (images/logo.jpg) -->
+        <div class="relative w-32 h-32 mx-auto mb-10 rounded-[2rem] overflow-hidden shadow-2xl border border-white border-opacity-10 theme-transition hover:scale-105 group bg-neutral-900">
+            <img src="images/logo.jpg" alt="EAviation HQ" class="w-full h-full object-cover" onerror="this.src='https://images.pexels.com/photos/417192/pexels-photo-417192.jpeg?auto=compress&cs=tinysrgb&w=400'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
+        </div>
 
-            <!-- Görsel Alanı (İndireceğin resimleri bağlayabileceğin yer) -->
-            <div class="relative mx-auto lg:ml-auto max-w-lg lg:max-w-none w-full">
-                <div class="absolute inset-0 bg-blue-400 rounded-3xl filter blur-3xl opacity-10 transform translate-x-4 translate-y-4"></div>
-                <div class="relative bg-white p-3 rounded-3xl shadow-xl border border-slate-200">
-                    <!--images/logo.jpg veya images/hero.jpg yapabilirsin-->
-                    <img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=800&q=80" alt="EAviation Cockpit" class="w-full h-[350px] lg:h-[450px] object-cover rounded-2xl shadow-inner">
-                </div>
-            </div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500 bg-opacity-10 text-[10px] tracking-widest text-blue-500 font-mono uppercase mb-6 shadow-inner">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span> ATC ONLINE: RADAR ACTIVE
+        </div>
 
+        <h1 id="hero-title" class="text-4xl md:text-7xl font-bold tracking-tight mb-6 text-current leading-tight">
+            Tarayıcıda Başlayan <br><span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400">Sonsuz Havacılık.</span>
+        </h1>
+        
+        <p id="hero-desc" class="text-base md:text-xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed mb-12 theme-transition">
+            Masaüstünüzden gökyüzüne açılan en hafif kapı. GeoFS simülatörünün sınırlarını zorlayarak Airbus ve Boeing serilerinin aerodinamik detaylarını sinematik 4K kalitesiyle masanıza getiriyoruz.
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="https://www.youtube.com/@EAviation_12" target="_blank" id="btn-subscribe" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-full text-sm font-medium theme-transition shadow-xl flex items-center gap-2">
+                <i class="fa-brands fa-youtube"></i> YouTube Kanalına Git
+            </a>
+            <a href="#fleet" id="btn-explore" class="apple-glass text-current px-8 py-3.5 rounded-full text-sm font-medium theme-transition flex items-center gap-2">
+                Sanal Filoyu İncele <i class="fa-solid fa-arrow-down text-xs opacity-60"></i>
+            </a>
         </div>
     </section>
 
-    <!-- 3. VİDEOLAR VE KATEGORİLER (YOUTUBE CANLI SERVER BAĞLANTILI) -->
-    <section id="videos" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <h2 id="section-title" class="text-3xl font-bold text-slate-900 sm:text-4xl tracking-tight">Kategori Yayın Akışı</h2>
-            <p id="section-desc" class="text-slate-500 text-lg">Aşağıdaki seriler doğrudan YouTube kanal arama sunucumuza bağlıdır. Tıkladığınızda en güncel videolar listelenir.</p>
+    <!-- 3. ETKİLEŞİMLİ SANAL FİLO -->
+    <section id="fleet" class="max-w-6xl mx-auto px-6 mb-28 relative z-10">
+        <div class="text-center md:text-left mb-12">
+            <h2 id="fleet-title" class="text-3xl font-bold tracking-tight text-current mb-2">EAviation Ana Sanal Filosu</h2>
+            <p id="fleet-desc" class="text-sm text-gray-400 font-light theme-transition">GeoFS simülasyonlarında aktif olarak test edilen ve kayıt altına alınan birincil gövdeler.</p>
         </div>
 
-        <!-- Kart Grid Yapısı -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Uçak 1 -->
+            <div class="apple-glass p-6 rounded-2xl theme-transition apple-card-glow flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono bg-blue-500 bg-opacity-10 text-blue-500 px-2 py-0.5 rounded">HEAVY</span>
+                        <i class="fa-solid fa-plane-up text-gray-400 text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-current mb-1">Boeing 777-300ER</h4>
+                    <p id="b777-desc" class="text-xs text-gray-400 font-light mb-4 theme-transition">Kanalın en çok tercih edilen uzun menzil geniş gövde simülasyon aracı.</p>
+                </div>
+                <div class="border-t border-neutral-500 border-opacity-20 pt-4 space-y-2 font-mono text-[11px] text-gray-400">
+                    <div class="flex justify-between"><span class="spec-stab">Kararlılık:</span> <span class="text-green-500 font-bold">9.2 / 10</span></div>
+                    <div class="flex justify-between"><span class="spec-pref">Tercih Oranı:</span> <span class="text-current">%45</span></div>
+                </div>
+            </div>
+
+            <!-- Uçak 2 -->
+            <div class="apple-glass p-6 rounded-2xl theme-transition apple-card-glow flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono bg-green-500 bg-opacity-10 text-green-500 px-2 py-0.5 rounded">SUPER</span>
+                        <i class="fa-solid fa-plane-up text-gray-400 text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-current mb-1">Airbus A380-800</h4>
+                    <p id="a380-desc" class="text-xs text-gray-400 font-light mb-4 theme-transition">GeoFS fiziklerindeki devasa kanat alanı ve usta iniş varyasyonları.</p>
+                </div>
+                <div class="border-t border-neutral-500 border-opacity-20 pt-4 space-y-2 font-mono text-[11px] text-gray-400">
+                    <div class="flex justify-between"><span class="spec-stab">Kararlılık:</span> <span class="text-yellow-500 font-bold">7.8 / 10</span></div>
+                    <div class="flex justify-between"><span class="spec-pref">Tercih Oranı:</span> <span class="text-current">%30</span></div>
+                </div>
+            </div>
+
+            <!-- Uçak 3 -->
+            <div class="apple-glass p-6 rounded-2xl theme-transition apple-card-glow flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono bg-purple-500 bg-opacity-10 text-purple-500 px-2 py-0.5 rounded">MID-SIZE</span>
+                        <i class="fa-solid fa-plane-up text-gray-400 text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-current mb-1">Boeing 737-800</h4>
+                    <p id="b737-desc" class="text-xs text-gray-400 font-light mb-4 theme-transition">Kısa ve orta mesafe dar gövde uçuşlarında rüzgarlı yaklaşma kralı.</p>
+                </div>
+                <div class="border-t border-neutral-500 border-opacity-20 pt-4 space-y-2 font-mono text-[11px] text-gray-400">
+                    <div class="flex justify-between"><span class="spec-stab">Kararlılık:</span> <span class="text-green-500 font-bold">9.5 / 10</span></div>
+                    <div class="flex justify-between"><span class="spec-pref">Tercih Oranı:</span> <span class="text-current">%15</span></div>
+                </div>
+            </div>
+
+            <!-- Uçak 4 -->
+            <div class="apple-glass p-6 rounded-2xl theme-transition apple-card-glow flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono bg-red-500 bg-opacity-10 text-red-500 px-2 py-0.5 rounded">REGIONAL</span>
+                        <i class="fa-solid fa-plane-up text-gray-400 text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-current mb-1">Airbus A320neo</h4>
+                    <p id="a320-desc" class="text-xs text-gray-400 font-light mb-4 theme-transition">Fly-by-wire sisteminin GeoFS üzerindeki tepkilerini ölçen ana gövde.</p>
+                </div>
+                <div class="border-t border-neutral-500 border-opacity-20 pt-4 space-y-2 font-mono text-[11px] text-gray-400">
+                    <div class="flex justify-between"><span class="spec-stab">Kararlılık:</span> <span class="text-green-500 font-bold">8.9 / 10</span></div>
+                    <div class="flex justify-between"><span class="spec-pref">Tercih Oranı:</span> <span class="text-current">%10</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. UÇUŞ KAYITLARI GALERİSİ -->
+    <section id="videos" class="max-w-6xl mx-auto px-6 mb-28 relative z-10">
+        <div class="flex items-baseline justify-between mb-10 border-b border-neutral-500 border-opacity-20 pb-4">
+            <h2 id="video-section-title" class="text-2xl font-bold tracking-tight text-current">Öne Çıkan Dijital Seferler</h2>
+            <a href="https://www.youtube.com/@EAviation_12" target="_blank" id="video-section-all" class="text-xs text-blue-500 hover:text-blue-400 theme-transition flex items-center gap-1">
+                Kanalı Ziyaret Et <i class="fa-solid fa-angle-right"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Kart 1 -->
+            <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="apple-glass rounded-3xl overflow-hidden group theme-transition hover:-translate-y-2 shadow-2xl block">
+                <div class="relative aspect-video overflow-hidden bg-neutral-900">
+                    <img src="images/boeing.jpg" alt="Boeing" class="w-full h-full object-cover theme-transition group-hover:scale-105" onerror="this.src='https://images.pexels.com/photos/1004584/pexels-photo-1004584.jpeg?auto=compress&cs=tinysrgb&w=600'">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 theme-transition">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-white text-2xl opacity-0 group-hover:opacity-100 theme-transition"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="text-[10px] uppercase font-mono tracking-widest text-blue-500 mb-2">BOEING SERIES</div>
+                    <h3 id="v1-title" class="text-base font-semibold text-current mb-2 group-hover:text-blue-500 theme-transition">Boeing Tüm İniş Varyasyonları</h3>
+                    <p id="v1-desc" class="text-xs text-gray-400 font-light leading-relaxed theme-transition">GeoFS içerisindeki efsanevi Boeing modelleriyle en kritik havalimanlarına iniş ve kokpit dinamikleri.</p>
+                </div>
+            </a>
+
+            <!-- Kart 2 -->
+            <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="apple-glass rounded-3xl overflow-hidden group theme-transition hover:-translate-y-2 shadow-2xl block">
+                <div class="relative aspect-video overflow-hidden bg-neutral-900">
+                    <img src="images/airbus.jpg" alt="Airbus" class="w-full h-full object-cover theme-transition group-hover:scale-105" onerror="this.src='https://images.pexels.com/photos/2011383/pexels-photo-2011383.jpeg?auto=compress&cs=tinysrgb&w=600'">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 theme-transition">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-white text-2xl opacity-0 group-hover:opacity-100 theme-transition"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="text-[10px] uppercase font-mono tracking-widest text-green-500 mb-2">AIRBUS SERIES</div>
+                    <h3 id="v2-title" class="text-base font-semibold text-current mb-2 group-hover:text-blue-500 theme-transition">Airbus Filosu ve Otomasyon Testleri</h3>
+                    <p id="v2-desc" class="text-xs text-gray-400 font-light leading-relaxed theme-transition">A320'den devasa A380'e kadar tüm Airbus ailesinin simülatördeki aerodinamik tepkileri.</p>
+                </div>
+            </a>
+
+            <!-- Kart 3 -->
+            <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="apple-glass rounded-3xl overflow-hidden group theme-transition hover:-translate-y-2 shadow-2xl block">
+                <div class="relative aspect-video overflow-hidden bg-neutral-900">
+                    <img src="images/spotting.jpg" alt="Planespotting" class="w-full h-full object-cover theme-transition group-hover:scale-105" onerror="this.src='https://images.pexels.com/photos/358312/pexels-photo-358312.jpeg?auto=compress&cs=tinysrgb&w=600'">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 theme-transition">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-white text-2xl opacity-0 group-hover:opacity-100 theme-transition"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="text-[10px] uppercase font-mono tracking-widest text-purple-400 mb-2">CINEMATIC</div>
+                    <h3 id="v3-title" class="text-base font-semibold text-current mb-2 group-hover:text-blue-500 theme-transition">4K Quality Planespotting in GeoFS</h3>
+                    <p id="v3-desc" class="text-xs text-gray-400 font-light leading-relaxed theme-transition">Maksimum grafik ayarlarında büyüleyici gün batımı eşliğinde sinematik uçak gözlemciliği seansı.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 5. RADAR PANELİ VE SİSTEM ALTYAPISI -->
+    <section id="specs" class="max-w-5xl mx-auto px-6 mb-28 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <!-- Kart 1: Boeing -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md smooth-transition flex flex-col">
-                <div class="h-52 overflow-hidden bg-slate-100 relative">
-                    <!--images/boeing.jpg yapabilirsin-->
-                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80" alt="Boeing" class="w-full h-full object-cover">
-                    <span class="absolute top-4 left-4 bg-blue-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">BOEING</span>
+            <div class="apple-glass p-6 rounded-3xl flex flex-col justify-between items-center relative overflow-hidden h-80 theme-transition">
+                <div class="w-full flex justify-between font-mono text-[10px] text-gray-400">
+                    <span>SECTOR: DELTA-006</span>
+                    <span class="text-green-500 animate-pulse">SCANNING...</span>
                 </div>
-                <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div>
-                        <h3 id="card-boeing-title" class="text-xl font-bold text-slate-900 mb-2">Boeing Mühendislik Serisi</h3>
-                        <p id="card-boeing-desc" class="text-slate-600 text-sm leading-relaxed">737, 777X ve efsanevi 747 gökyüzü kraliçelerinin detaylı incelemeleri ve kokpit içi uçuş operasyonları.</p>
+                
+                <div class="w-40 h-40 rounded-full border border-green-500 border-opacity-20 relative flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full overflow-hidden">
+                        <div class="w-1/2 h-1/2 border-r border-green-500 border-opacity-40 radar-line absolute bottom-1/2 right-1/2 bg-gradient-to-tl from-green-500 from-opacity-5 to-transparent"></div>
                     </div>
-                    <a href="https://www.youtube.com/@EAviation12/search?query=Boeing" target="_blank" class="w-full bg-slate-100 hover:bg-blue-600 hover:text-white text-blue-600 font-semibold py-3 px-4 rounded-xl text-center text-sm smooth-transition flex items-center justify-center gap-2 group">
-                        <span class="card-btn-text">Videoları Sunucudan Yükle</span> <i class="fa-solid fa-server text-xs opacity-60 group-hover:translate-x-1 smooth-transition"></i>
-                    </a>
+                    <i class="fa-solid fa-crosshairs text-green-500 opacity-20 text-xl"></i>
+                </div>
+
+                <div class="font-mono text-xs text-gray-400">
+                    <i class="fa-solid fa-satellite-dish text-green-500 mr-1"></i> GeoFS Global Tracking
                 </div>
             </div>
 
-            <!-- Kart 2: Airbus -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md smooth-transition flex flex-col">
-                <div class="h-52 overflow-hidden bg-slate-100 relative">
-                    <!--images/airbus.jpg yapabilirsin-->
-                    <img src="https://images.unsplash.com/photo-1517999144091-3d9dca6d1e43?auto=format&fit=crop&w=600&q=80" alt="Airbus" class="w-full h-full object-cover">
-                    <span class="absolute top-4 left-4 bg-indigo-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">AIRBUS</span>
+            <div class="apple-glass p-8 rounded-3xl md:col-span-2 flex flex-col justify-between theme-transition">
+                <div>
+                    <h3 id="specs-title" class="text-xl font-bold text-current mb-2">Simülasyon ve Kayıt Altyapısı</h3>
+                    <p id="specs-desc" class="text-xs text-gray-400 font-light leading-relaxed mb-6 theme-transition">
+                        Videolarımızın pürüzsüz, takılmasız ve gerçekçi motor sesleriyle size ulaşması için tarayıcı optimizasyonları ve yüksek çözünürlüklü donanımlar kullanıyoruz.
+                    </p>
                 </div>
-                <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div>
-                        <h3 id="card-airbus-title" class="text-xl font-bold text-slate-900 mb-2">Airbus Teknolojisi ve Otomasyon</h3>
-                        <p id="card-airbus-desc" class="text-slate-600 text-sm leading-relaxed">A320 Neo'dan devasa A380'e kadar, Airbus'ın Fly-by-Wire felsefesi ve akıllı kokpit çözümleri.</p>
-                    </div>
-                    <a href="https://www.youtube.com/@EAviation12/search?query=Airbus" target="_blank" class="w-full bg-slate-100 hover:bg-indigo-600 hover:text-white text-indigo-600 font-semibold py-3 px-4 rounded-xl text-center text-sm smooth-transition flex items-center justify-center gap-2 group">
-                        <span class="card-btn-text">Videoları Sunucudan Yükle</span> <i class="fa-solid fa-server text-xs opacity-60 group-hover:translate-x-1 smooth-transition"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Kart 3: Planespotting -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md smooth-transition flex flex-col">
-                <div class="h-52 overflow-hidden bg-slate-100 relative">
-                    <!--images/spotting.jpg yapabilirsin-->
-                    <img src="https://images.unsplash.com/photo-1610452601614-7db5984606ea?auto=format&fit=crop&w=600&q=80" alt="Planespotting" class="w-full h-full object-cover">
-                    <span class="absolute top-4 left-4 bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">SPOTTER</span>
-                </div>
-                <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div>
-                        <h3 id="card-spotting-title" class="text-xl font-bold text-slate-900 mb-2">Planespotting Sinematikleri</h3>
-                        <p id="card-spotting-desc" class="text-slate-600 text-sm leading-relaxed">Havalimanı pist kenarlarından, rüzgarlı havalardaki zorlu iniş ve kalkış anlarının 4K ultra net kayıtları.</p>
-                    </div>
-                    <a href="https://www.youtube.com/@EAviation12/search?query=Planespotting" target="_blank" class="w-full bg-slate-100 hover:bg-emerald-600 hover:text-white text-emerald-600 font-semibold py-3 px-4 rounded-xl text-center text-sm smooth-transition flex items-center justify-center gap-2 group">
-                        <span class="card-btn-text">Videoları Sunucudan Yükle</span> <i class="fa-solid fa-server text-xs opacity-60 group-hover:translate-x-1 smooth-transition"></i>
-                    </a>
+                <div class="grid grid-cols-2 gap-4 text-xs font-mono">
+                    <div class="bg-blue-500 bg-opacity-5 p-4 rounded-xl border border-neutral-500 border-opacity-10"><span class="text-gray-400">Engine:</span> <span class="text-current font-bold block mt-1">GeoFS 3.2</span></div>
+                    <div class="bg-blue-500 bg-opacity-5 p-4 rounded-xl border border-neutral-500 border-opacity-10"><span class="text-gray-400">Resolution:</span> <span class="text-blue-500 font-bold block mt-1">4K Ultra HD</span></div>
+                    <div class="bg-blue-500 bg-opacity-5 p-4 rounded-xl border border-neutral-500 border-opacity-10"><span class="text-gray-400">Framerate:</span> <span class="text-green-500 font-bold block mt-1">60 FPS Stable</span></div>
+                    <div class="bg-blue-500 bg-opacity-5 p-4 rounded-xl border border-neutral-500 border-opacity-10"><span class="text-gray-400">Audio:</span> <span class="text-current font-bold block mt-1">Stereo Cockpit</span></div>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- 4. FOOTER (ALT BİLGİ VE YOUTUBE TAM ENTEGRASYON) -->
-    <footer class="bg-slate-900 text-slate-300 border-t border-slate-800 py-12 mt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <div class="space-y-4">
-                <span class="text-white text-lg font-bold">EAviation</span>
-                <p id="footer-about" class="text-sm text-slate-400">Gökyüzü tutkunlarını kaliteli içerik ve teknik havacılık analizleriyle bir araya getiren bağımsız medya platformu.</p>
-            </div>
-
-            <div class="space-y-3">
-                <h4 id="footer-links-title" class="text-white font-semibold">Uçuş Hatları (YT Server)</h4>
-                <ul class="space-y-2 text-sm text-slate-400">
-                    <li>
-                        <a href="https://www.youtube.com/@EAviation12/search?query=Boeing" target="_blank" class="hover:text-white smooth-transition flex items-center gap-1">
-                            Boeing Arşivi <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-40"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.youtube.com/@EAviation12/search?query=Airbus" target="_blank" class="hover:text-white smooth-transition flex items-center gap-1">
-                            Airbus Arşivi <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-40"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.youtube.com/@EAviation12/search?query=Planespotting" target="_blank" class="hover:text-white smooth-transition flex items-center gap-1">
-                            Planespotting Arşivi <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-40"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="space-y-4">
-                <h4 id="footer-social-title" class="text-white font-semibold">Sosyal Radar</h4>
-                <div class="flex items-center gap-4">
-                    <a href="https://www.youtube.com/@EAviation12" target="_blank" class="w-10 h-10 rounded-lg bg-slate-800 text-white flex items-center justify-center hover:bg-red-600 smooth-transition"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-lg bg-slate-800 text-white flex items-center justify-center hover:bg-blue-500 smooth-transition"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-lg bg-slate-800 text-white flex items-center justify-center hover:bg-pink-600 smooth-transition"><i class="fa-brands fa-instagram"></i></a>
+    <!-- 6. FOOTER -->
+    <footer class="border-t border-neutral-500 border-opacity-10 bg-neutral-950 bg-opacity-60 pt-16 pb-12 text-xs text-gray-400 font-light theme-transition">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="space-y-3">
+                    <h4 class="text-current font-semibold text-sm">EAviation</h4>
+                    <p id="footer-about" class="text-gray-400 leading-relaxed theme-transition">GeoFS uçuş simülatöründe dijital havacılığın sınırlarını zorlayan bağımsız video üretim istasyonu.</p>
                 </div>
-                <p class="text-xs text-slate-500">&copy; 2026 EAviation. All rights reserved.</p>
+                <div class="space-y-2">
+                    <h4 id="footer-links-title" class="text-current font-semibold">Uçuş Hatları</h4>
+                    <ul class="space-y-1.5 text-gray-400 theme-transition">
+                        <li><a href="https://www.youtube.com/@EAviation_12" target="_blank" class="hover:text-blue-500">Boeing Serisi</a></li>
+                        <li><a href="https://www.youtube.com/@EAviation_12" target="_blank" class="hover:text-blue-500">Airbus Serisi</a></li>
+                        <li><a href="https://www.youtube.com/@EAviation_12" target="_blank" class="hover:text-blue-500">Planespotting Sinematikleri</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <h4 id="footer-radar-title" class="text-current font-semibold">Sosyal Radar</h4>
+                    <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="text-gray-400 hover:text-red-500 text-lg theme-transition"><i class="fa-brands fa-youtube"></i></a>
+                </div>
             </div>
-
+            <div class="border-t border-neutral-500 border-opacity-10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500">
+                <p>&copy; 2026 EAviation. Tüm Dijital Hakları Saklıdır.</p>
+                <p class="font-mono text-[10px]">FLIGHT LEVEL 410 // RADAR SYSTEM CONNECTED</p>
+            </div>
         </div>
     </footer>
 
-    <!-- DİL ÇEVİRİ VERİLERİ VE JS MOTORU -->
+    <!-- JS ÇEVİRİ VE TEMA MOTORU -->
     <script>
+        // Tema Değiştirme Sistemi (Koyu / Açık Mod)
+        function toggleTheme() {
+            const body = document.getElementById('themeBody');
+            const icon = document.getElementById('themeIcon');
+            const glow = document.getElementById('glow1');
+            
+            if (body.classList.contains('dark-mode')) {
+                // Açık moda geçiş
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                body.classList.remove('bg-black', 'text-[#f5f5f7]');
+                body.classList.add('bg-slate-50', 'text-slate-900');
+                
+                icon.classList.remove('fa-sun', 'text-yellow-400');
+                icon.classList.add('fa-moon', 'text-indigo-600');
+                if(glow) glow.style.opacity = "0";
+                
+                localStorage.setItem('selectedTheme', 'light');
+            } else {
+                // Koyu moda geçiş
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                body.classList.remove('bg-slate-50', 'text-slate-900');
+                body.classList.add('bg-black', 'text-[#f5f5f7]');
+                
+                icon.classList.remove('fa-moon', 'text-indigo-600');
+                icon.classList.add('fa-sun', 'text-yellow-400');
+                if(glow) glow.style.opacity = "1";
+                
+                localStorage.setItem('selectedTheme', 'dark');
+            }
+        }
+
+        // 5 Dilli Veri Sözlüğü
         const translations = {
             tr: {
-                navSubtitle: "Havacılık Dünyası",
-                menuHome: "Ana Sayfa",
-                menuVideos: "Videolar",
-                menuChannel: "YouTube Kanalı",
-                heroBadge: "Yeni Nesil Havacılık Medyası",
-                heroTitle: "Gökyüzünün En Net <span class='text-blue-600'>Kokpit Hikayeleri</span>",
-                heroDesc: "Boeing devlerinden Airbus teknolojilerine, havalimanlarındaki spotter anlarından uçuş simülasyonlarına kadar aradığınız her şey burada. YouTube sunucumuzla tam senkronize.",
-                btnSubscribe: "Abone Ol",
-                btnExplore: "Videoları Keşfet",
-                sectionTitle: "Kategori Yayın Akışı",
-                sectionDesc: "Aşağıdaki seriler doğrudan YouTube kanal arama sunucumuza bağlıdır. Tıkladığınızda en güncel videolar listelenir.",
-                cardBoeingTitle: "Boeing Mühendislik Serisi",
-                cardBoeingDesc: "737, 777X ve efsanevi 747 gökyüzü kraliçelerinin detaylı incelemeleri ve kokpit içi uçuş operasyonları.",
-                cardAirbusTitle: "Airbus Teknolojisi ve Otomasyon",
-                cardAirbusDesc: "A320 Neo'dan devasa A380'e kadar, Airbus'ın Fly-by-Wire felsefesi ve akıllı kokpit çözümleri.",
-                cardSpottingTitle: "Planespotting Sinematikleri",
-                cardSpottingDesc: "Havalimanı pist kenarlarından, rüzgarlı havalardaki zorlu iniş ve kalkış anlarının 4K ultra net kayıtları.",
-                cardBtnText: "Videoları Sunucudan Yükle",
-                footerAbout: "Gökyüzü tutkunlarını kaliteli içerik ve teknik havacılık analizleriyle bir araya getiren bağımsız medya platformu.",
-                footerLinksTitle: "Uçuş Hatları (YT Server)",
-                footerSocialTitle: "Sosyal Radar"
+                menuHome: "Hangar", menuFleet: "Sanal Filo", menuVideos: "Uçuş Kayıtları", menuSpecs: "Sistem", btnTopSub: "Takip Et",
+                heroTitle: "Tarayıcıda Başlayan <br><span class='bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400'>Sonsuz Havacılık.</span>",
+                heroDesc: "Masaüstünüzden gökyüzüne açılan en hafif kapı. GeoFS simülatörünün sınırlarını zorlayarak Airbus ve Boeing serilerinin aerodinamik detaylarını sinematik 4K kalitesiyle masanıza getiriyoruz.",
+                btnSubscribe: "YouTube Kanalına Git", btnExplore: "Sanal Filoyu İncele",
+                fleetTitle: "EAviation Ana Sanal Filosu", fleetDesc: "GeoFS simülasyonlarında aktif olarak test edilen ve kayıt altına alınan birincil gövdeler.",
+                b777Desc: "Kanalın en çok tercih edilen uzun menzil geniş gövde simülasyon aracı.",
+                a380Desc: "GeoFS fiziklerindeki devasa kanat alanı ve usta iniş varyasyonları.",
+                b737Desc: "Kısa ve orta mesafe dar gövde uçuşlarında rüzgarlı yaklaşma kralı.",
+                a320Desc: "Fly-by-wire sisteminin GeoFS üzerindeki tepkilerini ölçen ana gövde.",
+                specStab: "Kararlılık:", specPref: "Tercih Oranı:",
+                videoSectionTitle: "Öne Çıkan Dijital Seferler", videoSectionAll: "Kanalı Ziyaret Et",
+                v1Title: "Boeing Tüm İniş Varyasyonları", v1Desc: "GeoFS içerisindeki efsanevi Boeing modelleriyle en kritik havalimanlarına iniş ve kokpit dinamikleri.",
+                v2Title: "Airbus Filosu ve Otomasyon Testleri", v2Desc: "A320'den devasa A380'e kadar tüm Airbus ailesinin simülatördeki aerodinamik tepkileri.",
+                v3Title: "4K Quality Planespotting in GeoFS", v3Desc: "Maksimum grafik ayarlarında büyüleyici gün batımı eşliğinde sinematik uçak gözlemciliği seansı.",
+                specsTitle: "Simülasyon ve Kayıt Altyapısı", specsDesc: "Videolarımızın pürüzsüz, takılmasız ve gerçekçi motor sesleriyle size ulaşması için tarayıcı optimizasyonları ve yüksek çözünürlüklü donanımlar kullanıyoruz.",
+                footerAbout: "GeoFS uçuş simülatöründe dijital havacılığın sınırlarını zorlayan bağımsız video üretim istasyonu.",
+                footerLinksTitle: "Uçuş Hatları", footerRadarTitle: "Sosyal Radar"
             },
             az: {
-                navSubtitle: "Aviasiya Dünyası",
-                menuHome: "Ana Səhifə",
-                menuVideos: "Videolar",
-                menuChannel: "YouTube Kanalı",
-                heroBadge: "Yeni Nəsil Aviasiya Mediası",
-                heroTitle: "Göy Üzünün Ən Net <span class='text-blue-600'>Kokpit Hekayələri</span>",
-                heroDesc: "Boeing nəhənglərindən Airbus texnologiyalarına, hava limanlarındakı spotter anlarından uçuş simulyasiyalarına qədər axtardığınız hər şey burada. YouTube serverimizlə tam sinxron.",
-                btnSubscribe: "Abunə Ol",
-                btnExplore: "Videoları Kəşf Et",
-                sectionTitle: "Kateqoriya Yayım Axını",
-                sectionDesc: "Aşağıdakı seriyalar birbaşa YouTube kanalının axtarış serverinə bağlıdır. Kliklədikdə ən son videolar siyahıya alınır.",
-                cardBoeingTitle: "Boeing Mühəndislik Seriyası",
-                cardBoeingDesc: "737, 777X və əfsanəvi 747 göy üzü kraliçalarının ətraflı təhlilləri və kokpit daxili uçuş əməliyyatları.",
-                cardAirbusTitle: "Airbus Texnologiyası və Avtomatlaşdırma",
-                cardAirbusDesc: "A320 Neo-dan nəhəng A380-ə qədər, Airbus-ın Fly-by-Wire fəlsəfəsi və ağıllı kokpit həlləri.",
-                cardSpottingTitle: "Planespotting Kinematikləri",
-                cardSpottingDesc: "Hava limanı uçuş-enmə zolaqlarının kənarından, küləkli havalarda çətin eniş və qalxma anlarının 4K ultra net qeydləri.",
-                cardBtnText: "Videoları Serverdən Yüklə",
-                footerAbout: "Göy üzü həvəskarlarını keyfiyyətli məzmun və texniki aviasiya analizləri ilə bir araya gətirən müstəqil media platforması.",
-                footerLinksTitle: "Uçuş Xətləri (YT Server)",
-                footerSocialTitle: "Sosial Radar"
+                menuHome: "Anqar", menuFleet: "Sanal Donanma", menuVideos: "Uçuş Qeydləri", menuSpecs: "Sistem", btnTopSub: "İzlə",
+                heroTitle: "Brauzerdə Başlayan <br><span class='bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400'>Sonsuz Aviasiya.</span>",
+                heroDesc: "Masaüstünüzdən göy üzünə açılan ən yüngül qapı. GeoFS simulyatorunun sərhədlərini aşaraq Airbus və Boeing seriyalarının aerodinamik detallarını kinematik 4K keyfiyyəti ilə masanıza gətiririk.",
+                btnSubscribe: "YouTube Kanalına Get", btnExplore: "Sanal Donanmaya Bax",
+                fleetTitle: "EAviation Əsas Sanal Donanması", fleetDesc: "GeoFS simulyasiyalarında aktiv şəkildə sınaqdan keçirilmiş və qeydə alınmış əsas gövdələr.",
+                b777Desc: "Kanalın ən çox bəyənilən uzun mənzilli geniş gövdəli simulyasiya vasitəsi.",
+                a380Desc: "GeoFS fizikasında nəhəng qanad sahəsi və usta eniş variantları.",
+                b737Desc: "Qısa və orta məsafəli dar gövdəli uçuşlarda küləkli yaxınlaşma kralı.",
+                a320Desc: "Fly-by-wire sisteminin GeoFS üzərindəki reaksiyalarını ölçən əsas gövdə.",
+                specStab: "Sabitlik:", specPref: "Seçim Nisbəti:",
+                videoSectionTitle: "Seçilmiş Rəqəmsal Uçuşlar", videoSectionAll: "Kanala Baş Çək",
+                v1Title: "Boeing Bütün Eniş Variantları", v1Desc: "GeoFS-dəki əfsanəvi Boeing modelləri ilə ən kritik hava limanlarına eniş və kokpit dinamikası.",
+                v2Title: "Airbus Donanması və Avtomatlaşdırma Sınaqları", v2Desc: "A320-dən nəhəng A380-ə qədər bütün Airbus ailəsinin simulyatordakı aerodinamik reaksiyaları.",
+                v3Title: "4K Keyfiyyətli Planespotting GeoFS-də", v3Desc: "Maksimum qrafika parametrlərində füsunkar qürub çağında kinematik təyyarə müşahidəsi seansı.",
+                specsTitle: "Simulyasiya və Qeydiyyat İnfrastrukturu", specsDesc: "Videolarımızın problemsiz, donmadan və real mühərrik səsləri ilə sizə çatması üçün brauzer optimallaşdırmalarından və yüksək dəqiqlikli avadanlıqlardan istifadə edirik.",
+                footerAbout: "GeoFS uçuş simulyatorunda rəqəmsal aviasiyanın sərhədlərini itələyən müstəqil video istehsal stansiyası.",
+                footerLinksTitle: "Uçuş Xətləri", footerRadarTitle: "Sosial Radar"
             },
             en: {
-                navSubtitle: "World of Aviation",
-                menuHome: "Home",
-                menuVideos: "Videos",
-                menuChannel: "YouTube Channel",
-                heroBadge: "Next-Gen Aviation Media",
-                heroTitle: "The Clearest <span class='text-blue-600'>Cockpit Stories</span> of the Sky",
-                heroDesc: "From Boeing giants to Airbus innovations, airport spotting moments to high-fidelity flight simulations. Fully synchronized with our YouTube server.",
-                btnSubscribe: "Subscribe",
-                btnExplore: "Explore Videos",
-                sectionTitle: "Category Stream",
-                sectionDesc: "The categories below connect directly to our live YouTube search server to fetch the most up-to-date video streams.",
-                cardBoeingTitle: "Boeing Engineering Series",
-                cardBoeingDesc: "Deep dives into the 737, 777X, and the legendary 747 Queen of the Skies, including real flight deck operations.",
-                cardAirbusTitle: "Airbus Tech & Automation",
-                cardAirbusDesc: "From the nimble A320 Neo to the double-decker A380, exploring Airbus's Fly-by-Wire philosophy and cockpit intelligence.",
-                cardSpottingTitle: "Planespotting Cinematics",
-                cardSpottingDesc: "Ultra-sharp 4K captures of crosswind landings, heavy takeoffs, and raw engine sounds directly from the runway fences.",
-                cardBtnText: "Fetch from YT Server",
-                footerAbout: "An independent media platform uniting aviation enthusiasts with premium content and inside technical cockpit analysis.",
-                footerLinksTitle: "Flight Routes (YT Server)",
-                footerSocialTitle: "Social Radar"
+                menuHome: "Hangar", menuFleet: "Virtual Fleet", menuVideos: "Flight Logs", menuSpecs: "Systems", btnTopSub: "Follow",
+                heroTitle: "Infinite Aviation <br><span class='bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400'>Starts in the Browser.</span>",
+                heroDesc: "The lightest gateway from your desktop to the skies. Pushing the limits of the GeoFS simulator, we bring the aerodynamic details of Airbus and Boeing series to your screen in cinematic 4K.",
+                btnSubscribe: "Go to YouTube Channel", btnExplore: "Inspect Virtual Fleet",
+                fleetTitle: "EAviation Main Virtual Fleet", fleetDesc: "Primary airframes actively tested and recorded during GeoFS simulation campaigns.",
+                b777Desc: "The most preferred long-range wide-body simulation aircraft of the channel.",
+                a380Desc: "Massive wing area physics and expert landing variations in GeoFS.",
+                b737Desc: "The king of crosswind approaches in short-to-medium haul narrow-body flights.",
+                a320Desc: "The main airframe used for benchmarking fly-by-wire system responses on GeoFS.",
+                specStab: "Stability:", specPref: "Preference:",
+                videoSectionTitle: "Featured Digital Severs", videoSectionAll: "Visit Channel",
+                v1Title: "Boeing All Landing Variations", v1Desc: "Landing performance and cockpit dynamics into the most critical airports with legendary Boeing airframes.",
+                v2Title: "Airbus Fleet & Automation Testing", v2Desc: "Aerodynamic behavior and handling of the entire Airbus family, from the nimble A320 to the double-decker A380.",
+                v3Title: "4K Quality Planespotting in GeoFS", v3Desc: "A cinematic airport plane-spotting session captured under maximum graphic settings during golden hour sunset.",
+                specsTitle: "Simulation & Recording Infrastructure", specsDesc: "We deploy heavy browser optimizations and high-resolution capture hardware to deliver butter-smooth videos with high-fidelity engine acoustics.",
+                footerAbout: "An independent digital media hub pushing the absolute envelope of browser-based flight simulation within the GeoFS engine.",
+                footerLinksTitle: "Flight Routes", footerRadarTitle: "Social Radar"
             },
             ru: {
-                navSubtitle: "Мир Авиации",
-                menuHome: "Главная",
-                menuVideos: "Видео",
-                menuChannel: "YouTube Канал",
-                heroBadge: "Авиационные Медиа Нового Поколения",
-                heroTitle: "Самые Четкие <span class='text-blue-600'>Истории из Кокпита</span>",
-                heroDesc: "От гигантов Boeing до технологий Airbus, от споттинга в аэропортах до симуляторов полетов. Полная синхронизация с сервером YouTube.",
-                btnSubscribe: "Подписаться",
-                btnExplore: "Смотреть Видео",
-                sectionTitle: "Поток Категорий",
-                sectionDesc: "Следующие серии напрямую подключены к поисковому серверу нашего YouTube-канала. При клике выводятся самые свежие видео.",
-                cardBoeingTitle: "Инженерия Boeing",
-                cardBoeingDesc: "Детальные обзоры королев неба 737, 777X и легендарного 747, а также реальные полетные операции в кабине.",
-                cardAirbusTitle: "Технологии и Автоматика Airbus",
-                cardAirbusDesc: "От легендарного A320 Neo до гиганта A380: философия управления Fly-by-Wire и умные решения для пилотов.",
-                cardSpottingTitle: "Синематика Плейнспоттинга",
-                cardSpottingDesc: "Записи сверхвысокой четкости 4K: сложные посадки при боковом ветре и взлеты прямо у взлетно-посадочной полосы.",
-                cardBtnText: "Загрузить с Сервера YT",
-                footerAbout: "Независимая медиаплатформа, объединяющая любителей неба с помощью качественного контента и технического анализа авиации.",
-                footerLinksTitle: "Полетные Линии (YT Сервер)",
-                footerSocialTitle: "Социальный Радар"
+                menuHome: "Ангар", menuFleet: "Виртуальный Флот", menuVideos: "Бортжурналы", menuSpecs: "Системы", btnTopSub: "Подписаться",
+                heroTitle: "Бесконечная Авиация <br><span class='bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400'>Начинается в Браузере.</span>",
+                heroDesc: "Самый легкий путь с вашего рабочего стола в облака. Раздвигая границы симулятора GeoFS, мы переносим аэродинамические детали серий Airbus и Boeing на ваш экран в синематик качестве 4K.",
+                btnSubscribe: "Перейти на YouTube канал", btnExplore: "Осмотреть Виртуальный Флот",
+                fleetTitle: "Основной Виртуальный Флот EAviation", fleetDesc: "Основные типы ВС, активно тестируемые и записываемые в полетных кампаниях GeoFS.",
+                b777Desc: "Самый предпочитаемый дальнемагистральный широкофюзеляжный симуляторный самолет канала.",
+                a380Desc: "Физика огромной площади крыла и мастерские заходы на посадку в условиях GeoFS.",
+                b737Desc: "Король заходов при боковом ветре на ближне- и среднемагистральных рейсах.",
+                a320Desc: "Основной планер для оценки работы автоматики и системы электродистанционного управления.",
+                specStab: "Стабильность:", specPref: "Выбор Пилотов:",
+                videoSectionTitle: "Избранные Цифровые Рейсы", videoSectionAll: "Посетить Канал",
+                v1Title: "Boeing: Все Варианты Посадок", v1Desc: "Посадочные характеристики и динамика кабины в самых сложных аэропортах мира на легендарных Боингах.",
+                v2Title: "Флот Airbus и Тесты Автоматизации", v2Desc: "Aэродинамическое поведение всего семейства Airbus, от маневренного A320 до двухпалубного гиганта A380.",
+                v3Title: "4K Споттинг в Симуляторе GeoFS", v3Desc: "Синематик-сессия споттинга в аэропорту при максимальных настройках графики во время заката.",
+                specsTitle: "Инфраструктура Симуляции и Записи", specsDesc: "Мы используем глубокую оптимизацию браузера и высококлассное оборудование для записи, чтобы обеспечить плавную картинку и сочный звук.",
+                footerAbout: "Независимый цифровой медиа-хаб, выжимающий максимум возможностей из браузерного движка авиасимулятора GeoFS.",
+                footerLinksTitle: "Полетные Линии", footerRadarTitle: "Социальный Радар"
             },
             de: {
-                navSubtitle: "Welt der Luftfahrt",
-                menuHome: "Startseite",
-                menuVideos: "Videos",
-                menuChannel: "YouTube-Kanal",
-                heroBadge: "Aviation-Medien der nächsten Generation",
-                heroTitle: "Die klarsten <span class='text-blue-600'>Cockpit-Geschichten</span> des Himmels",
-                heroDesc: "Von Boeing-Giganten bis hin zu Airbus-Technologien, von Spotting-Momenten an Flughäfen bis zu Flugsimulationen. Perfekt synchronisiert mit unserem YouTube-Server.",
-                btnSubscribe: "Abonnieren",
-                btnExplore: "Videos Entdecken",
-                sectionTitle: "Kategorie-Stream",
-                sectionDesc: "Die folgenden Serien sind direkt mit unserem YouTube-Suchserver verbunden. Ein Klick listet die neuesten Videos auf.",
-                cardBoeingTitle: "Boeing Engineering-Serie",
-                cardBoeingDesc: "Detaillierte Einblicke in die 737, 777X und die legendäre 747 Königin der Lüfte inklusive realer Cockpit-Abläufe.",
-                cardAirbusTitle: "Airbus-Technologie & Automation",
-                cardAirbusDesc: "Vom wendigen A320 Neo bis zum gigantischen A380: Die Fly-by-Wire-Philosophie und intelligente Cockpit-Systeme von Airbus.",
-                cardSpottingTitle: "Planespotting-Kinematik",
-                cardSpottingDesc: "Gestochen scharfe 4K-Aufnahmen von Seitenwindlandungen, schweren Starts und Triebwerkssounds direkt vom Pistenzaun.",
-                cardBtnText: "Vom YT-Server laden",
-                footerAbout: "Eine unabhängige Medienplattform, die Luftfahrt-Enthusiasten mit erstklassigen Inhalten und technischen Cockpit-Analysen verbindet.",
-                footerLinksTitle: "Fluglinien (YT Server)",
-                footerSocialTitle: "Social Radar"
+                menuHome: "Hangar", menuFleet: "Virtuelle Flotte", menuVideos: "Flugprotokolle", menuSpecs: "Systeme", btnTopSub: "Folgen",
+                heroTitle: "Endlose Luftfahrt <br><span class='bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400'>Beginnt im Browser.</span>",
+                heroDesc: "Das leichteste Tor von Ihrem Desktop direkt in den Himmel. Wir reizen die Grenzen des GeoFS-Simulators aus und bringen Airbus- und Boeing-Aerodynamik in kinoreifem 4K auf Ihren Bildschirm.",
+                btnSubscribe: "Zum YouTube-Kanal", btnExplore: "Virtuelle Flotte Prüfen",
+                fleetTitle: "EAviation Hauptflotte", fleetDesc: "Primäre Flugzeugtypen, die im Rahmen von GeoFS-Simulationsflügen intensiv getestet und dokumentiert werden.",
+                b777Desc: "Das beliebteste Großraum-Langstreckenflugzeug des Kanals für komplexe Flugprofile.",
+                a380Desc: "Gewaltige Tragflächenphysik und meisterhafte Landevariationen innerhalb der GeoFS-Engine.",
+                b737Desc: "Der König der Seitenwind-Anflüge auf Kurz- und Mittelstreckenflügen im Schmalrumpfsegment.",
+                a320Desc: "Die primäre Zelle zur Evaluierung von Fly-by-Wire-Systemreaktionen unter GeoFS-Bedingungen.",
+                specStab: "Stabilität:", specPref: "Präferenzwert:",
+                videoSectionTitle: "Herausragende Digitale Flüge", videoSectionAll: "Kanal Besuchen",
+                v1Title: "Boeing Alle Landevarianten", v1Desc: "Landeperformance und Cockpitdynamik auf den anspruchsvollsten Flughäfen mit legendären Boeing-Modellen.",
+                v2Title: "Airbus Flotte & Automatisierungstests", v2Desc: "Aerodynamisches Verhalten der gesamten Airbus-Familie, vom wendigen A320 bis zum doppelstöckigen A380.",
+                v3Title: "4K Qualität Planespotting in GeoFS", v3Desc: "Eine kinoreife Planespotting-Session bei maximalen Grafikeinstellungen während des abendlichen Sonnenuntergangs.",
+                specsTitle: "Simulations- & Aufnahme-Infrastruktur", specsDesc: "Wir nutzen gezielte Browser-Optimierungen und High-End-Hardware für absolut flüssige Videos und authentische Cockpit-Akustik.",
+                footerAbout: "Ein unabhängiges Medien-Hub, das die absolute Leistungsgrenze der browserbasierten Flugsimulation in GeoFS demonstriert.",
+                footerLinksTitle: "Fluglinien", footerRadarTitle: "Social Radar"
             }
         };
 
@@ -330,45 +464,60 @@
             const data = translations[lang];
             if (!data) return;
 
-            // DOM Güncellemeleri
-            document.getElementById('nav-subtitle').innerText = data.navSubtitle;
             document.getElementById('menu-home').innerText = data.menuHome;
+            document.getElementById('menu-fleet').innerText = data.menuFleet;
             document.getElementById('menu-videos').innerText = data.menuVideos;
-            document.getElementById('menu-channel').innerText = data.menuChannel;
+            document.getElementById('menu-specs').innerText = data.menuSpecs;
+            document.getElementById('btn-top-sub').innerText = data.btnTopSub;
             
-            document.getElementById('hero-badge').innerHTML = `<i class="fa-solid fa-plane-departure"></i> ${data.heroBadge}`;
             document.getElementById('hero-title').innerHTML = data.heroTitle;
             document.getElementById('hero-desc').innerText = data.heroDesc;
-            document.getElementById('btn-subscribe').innerHTML = `<i class="fa-brands fa-youtube text-lg"></i> ${data.btnSubscribe}`;
-            document.getElementById('btn-explore').innerHTML = `${data.btnExplore} <i class="fa-solid fa-arrow-down"></i>`;
+            document.getElementById('btn-subscribe').innerHTML = `<i class="fa-brands fa-youtube"></i> ${data.btnSubscribe}`;
+            document.getElementById('btn-explore').innerHTML = `${data.btnExplore} <i class="fa-solid fa-arrow-down text-xs opacity-60"></i>`;
 
-            document.getElementById('section-title').innerText = data.sectionTitle;
-            document.getElementById('section-desc').innerText = data.sectionDesc;
+            document.getElementById('fleet-title').innerText = data.fleetTitle;
+            document.getElementById('fleet-desc').innerText = data.fleetDesc;
+            document.getElementById('b777-desc').innerText = data.b777Desc;
+            document.getElementById('a380-desc').innerText = data.a380Desc;
+            document.getElementById('b737-desc').innerText = data.b737Desc;
+            document.getElementById('a320-desc').innerText = data.a320Desc;
 
-            document.getElementById('card-boeing-title').innerText = data.cardBoeingTitle;
-            document.getElementById('card-boeing-desc').innerText = data.cardBoeingDesc;
-            document.getElementById('card-airbus-title').innerText = data.cardAirbusTitle;
-            document.getElementById('card-airbus-desc').innerText = data.cardAirbusDesc;
-            document.getElementById('card-spotting-title').innerText = data.cardSpottingTitle;
-            document.getElementById('card-spotting-desc').innerText = data.cardSpottingDesc;
+            document.querySelectorAll('.spec-stab').forEach(el => el.innerText = data.specStab);
+            document.querySelectorAll('.spec-pref').forEach(el => el.innerText = data.specPref);
 
-            // Kartlardaki buton metinlerini güncelle
-            const btnTexts = document.querySelectorAll('.card-btn-text');
-            btnTexts.forEach(btn => btn.innerText = data.cardBtnText);
+            document.getElementById('video-section-title').innerText = data.videoSectionTitle;
+            document.getElementById('video-section-all').innerHTML = `${data.videoSectionAll} <i class="fa-solid fa-angle-right"></i>`;
+            
+            document.getElementById('v1-title').innerText = data.v1Title;
+            document.getElementById('v1-desc').innerText = data.v1Desc;
+            document.getElementById('v2-title').innerText = data.v2Title;
+            document.getElementById('v2-desc').innerText = data.v2Desc;
+            document.getElementById('v3-title').innerText = data.v3Title;
+            document.getElementById('v3-desc').innerText = data.v3Desc;
 
+            document.getElementById('specs-title').innerText = data.specsTitle;
+            document.getElementById('specs-desc').innerText = data.specsDesc;
+            
             document.getElementById('footer-about').innerText = data.footerAbout;
             document.getElementById('footer-links-title').innerText = data.footerLinksTitle;
-            document.getElementById('footer-social-title').innerText = data.footerSocialTitle;
+            document.getElementById('footer-radar-title').innerText = data.footerRadarTitle;
             
-            // Dil seçimini yerel hafızaya (Local Storage) kaydet, sayfa yenilense de gitmesin
             localStorage.setItem('selectedLanguage', lang);
         }
 
-        // Sayfa ilk yüklendiğinde hafızadaki dili kontrol et
+        // Sayfa Açılış Ayarları (Hafızadan Tema ve Dil Yükleme)
         window.onload = function() {
+            // Dil Yükle
             const savedLang = localStorage.getItem('selectedLanguage') || 'tr';
             document.getElementById('languageSelector').value = savedLang;
             changeLanguage(savedLang);
+
+            // Tema Yükle
+            const savedTheme = localStorage.getItem('selectedTheme') || 'dark';
+            if (savedTheme === 'light') {
+                // Varsayılan koyu mod olduğu için tıkla mekanizmasını çalıştırarak açık moda alıyoruz
+                toggleTheme();
+            }
         };
     </script>
 </body>
