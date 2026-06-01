@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eAviation12 - Hub of Aviation</title>
+    <title>EAviation_12 - Hub of Aviation</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Apple Tarzı Global Değişkenler ve eAviation12 Kimliği */
+        /* Apple Tarzı Global Tasarım Çizgileri ve EAviation_12 Kimliği */
         :root[data-theme="dark"] {
             --bg-color: #000000;
             --nav-bg: rgba(22, 22, 23, 0.8);
             --text-color: #f5f5f7;
             --text-secondary: #86868b;
-            --accent-color: #ff0000; /* YouTube Kırmızısı Dokunuşu */
+            --accent-color: #ff0000; /* Premium YouTube Kırmızısı */
             --blue-accent: #2997ff;
             --card-bg: #1d1d1f;
             --border-color: rgba(255, 255, 255, 0.1);
@@ -46,7 +46,7 @@
             overflow-x: hidden;
         }
 
-        /* 1. KADEME: Ana Navigasyon */
+        /* Üst Menü - 1. Aşama */
         header {
             position: fixed;
             top: 0;
@@ -123,7 +123,7 @@
             color: var(--bg-color);
         }
 
-        /* 2. KADEME: Alt Navigasyon (Modeller) */
+        /* Alt Menü (Modeller) - 2. Aşama */
         .sub-nav {
             position: fixed;
             top: 48px;
@@ -164,7 +164,7 @@
             color: #ffffff;
         }
 
-        /* eAviation12 Ana Kanal Giriş Ekranı (Hero) */
+        /* EAviation_12 Giriş (Hero) Alanı */
         .hero {
             height: 100vh;
             display: flex;
@@ -194,7 +194,7 @@
             margin-bottom: 30px;
         }
 
-        /* Premium YouTube Yönlendirme Butonu */
+        /* YouTube Abone Ol Butonu */
         .yt-button {
             display: inline-flex;
             align-items: center;
@@ -215,7 +215,7 @@
             box-shadow: 0 15px 30px rgba(255, 0, 0, 0.4);
         }
 
-        /* Detaylı Ürün Sayfası */
+        /* Ürün Vitrini (Üstte Foto, Altta Bilgi) */
         .showcase {
             min-height: 100vh;
             padding-top: 120px;
@@ -274,7 +274,7 @@
             text-align: justify;
         }
 
-        /* Video İnceleme Butonu */
+        /* YouTube İnceleme Butonu */
         .video-link-container {
             text-align: center;
             margin: 20px 0 30px 0;
@@ -301,7 +301,7 @@
             transform: scale(1.02);
         }
 
-        /* Teknik Kartlar */
+        /* Teknik Özellik Kartları */
         .specs-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -349,9 +349,10 @@
 </head>
 <body>
 
+    <!-- Üst Navigasyon Kontrolü -->
     <header>
         <div class="nav-container">
-            <a class="logo" onclick="goHome()">eAviation<span>12</span></a>
+            <a class="logo" onclick="goHome()">EAviation_<span>12</span></a>
             <ul class="brand-menu">
                 <li><a class="brand-link" onclick="selectBrand('airbus')">Airbus</a></li>
                 <li><a class="brand-link" onclick="selectBrand('boeing')">Boeing</a></li>
@@ -365,16 +366,19 @@
         </div>
     </header>
 
+    <!-- Dinamik Alt Menü (Modeller) -->
     <nav class="sub-nav" id="subNav">
         <div class="sub-nav-container" id="subnavLinks"></div>
     </nav>
 
+    <!-- Ana Sayfa Karşılama Ekranı -->
     <section class="hero" id="heroSection">
-        <h1 id="heroTitle">Welcome to eAviation12</h1>
-        <p id="heroDesc">The ultimate digital hangar for aviation enthusiasts. Explore full technical metrics and flight review data.</p>
-        <a href="https://www.youtube.com/@eAviation12" target="_blank" class="yt-button" id="ytSubscribeBtn"> Subscribe on YouTube</a>
+        <h1 id="heroTitle">Welcome to EAviation_12</h1>
+        <p id="heroDesc">The official digital hangar for our YouTube aviation community. Explore full technical metrics and flight review data.</p>
+        <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="yt-button" id="ytSubscribeBtn"> Subscribe on YouTube</a>
     </section>
 
+    <!-- Dinamik Üçak Gösterim Alanı -->
     <section class="showcase" id="showcaseSection">
         <div class="image-viewport">
             <img id="airImage" src="" alt="Aircraft">
@@ -386,9 +390,10 @@
                 <p class="aircraft-desc" id="airDescription">Detailed description...</p>
             </div>
 
+            <!-- YouTube Video Link Butonu -->
             <div class="video-link-container">
-                <a href="#" target="_blank" class="btn-watch-video" id="airVideoLink">
-                    ▶ <span id="lblWatchVideo">Watch the Video on eAviation12</span>
+                <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="btn-watch-video" id="airVideoLink">
+                    ▶ <span id="lblWatchVideo">Watch the Video on EAviation_12</span>
                 </a>
             </div>
 
@@ -413,6 +418,7 @@
         </div>
     </section>
 
+    <!-- Veritabanı ve Çalışma Scripti -->
     <script>
         let currentLang = 'en';
         let currentTheme = 'dark';
@@ -420,28 +426,27 @@
 
         const uiText = {
             en: {
-                heroTitle: "Welcome to eAviation12",
-                heroDesc: "The ultimate digital hangar for aviation enthusiasts. Explore full technical metrics and flight review data.",
+                heroTitle: "Welcome to EAviation_12",
+                heroDesc: "The official digital hangar for our YouTube aviation community. Explore full technical metrics and flight review data.",
                 ytBtn: " Subscribe on YouTube",
                 lblRange: "MAX RANGE",
                 lblCap: "PASSENGER CAPACITY",
                 lblSpeed: "CRUISE SPEED",
                 lblStructure: "FUSELAGE TYPE",
-                lblWatchVideo: "Watch the Video on eAviation12"
+                lblWatchVideo: "Watch the Video on EAviation_12"
             },
             tr: {
-                heroTitle: "eAviation12'ye Hoş Geldiniz",
-                heroDesc: "Havacılık tutkunları için dijital hangar. Teknik verileri ve uçuş analizlerini Apple kalitesiyle keşfedin.",
+                heroTitle: "EAviation_12'ye Hoş Geldiniz",
+                heroDesc: "YouTube havacılık topluluğumuzun resmi dijital hangarı. Teknik verileri ve uçuş analizlerini Apple kalitesiyle keşfedin.",
                 ytBtn: " YouTube'da Abone Ol",
                 lblRange: "MAKSİMUM MENZİL",
                 lblCap: "YOLCU KAPASİTESİ",
                 lblSpeed: "SEYİR HIZI",
                 lblStructure: "GÖVDE YAPISI",
-                lblWatchVideo: "Videoyu eAviation12'de İzleyin"
+                lblWatchVideo: "Videoyu EAviation_12'de İzleyin"
             }
         };
 
-        // Her uçağın altına kendi kanalındaki ilgili videonun linkini "videoUrl" kısmına ekleyebilirsin!
         const fleetData = {
             airbus: {
                 a320: {
@@ -453,18 +458,18 @@
                     },
                     img: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=1200&q=80",
                     range: "6,500 km", cap: "150 - 180", speed: "Mach 0.78", body: { en: "Single-Aisle", tr: "Dar Gövde" },
-                    videoUrl: "https://www.youtube.com/@eAviation12" // Buraya o uçakla ilgili videonun linkini koyabilirsin
+                    videoUrl: "https://www.youtube.com/@EAviation_12"
                 },
                 a350: {
                     name: "Airbus A350-900",
-                    tagline: { en: "The clean-sheet design icon", tr: "Sıfardan tasarlanan teknoloji ikonu" },
+                    tagline: { en: "The clean-sheet design icon", tr: "Sıfırdan tasarlanan teknoloji ikonu" },
                     desc: {
                         en: "Shaping the future of air travel, Airbus A350 offers state-of-the-art aerodynamics, carbon-fibre fuselage and ultra-quiet cabin comfort.",
                         tr: "Hava seyahatinin geleceğini şekillendiren A350, son teknoloji aerodinamik, karbon fiber gövde ve ultra sessiz kabin konforu sunar."
                     },
                     img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80",
                     range: "15,000 km", cap: "300 - 350", speed: "Mach 0.85", body: { en: "Wide-Body", tr: "Geniş Gövde" },
-                    videoUrl: "https://www.youtube.com/@eAviation12"
+                    videoUrl: "https://www.youtube.com/@EAviation_12"
                 }
             },
             boeing: {
@@ -477,7 +482,7 @@
                     },
                     img: "https://images.unsplash.com/photo-1517999144091-3d9dca6d1e43?auto=format&fit=crop&w=1200&q=80",
                     range: "14,140 km", cap: "242 - 330", speed: "Mach 0.85", body: { en: "Wide-Body", tr: "Geniş Gövde" },
-                    videoUrl: "https://www.youtube.com/@eAviation12"
+                    videoUrl: "https://www.youtube.com/@EAviation_12"
                 }
             },
             embraer: {
@@ -490,7 +495,7 @@
                     },
                     img: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80",
                     range: "4,815 km", cap: "120 - 146", speed: "Mach 0.78", body: { en: "Regional Jet", tr: "Bölgesel Jet" },
-                    videoUrl: "https://www.youtube.com/@eAviation12"
+                    videoUrl: "https://www.youtube.com/@EAviation_12"
                 }
             },
             bombardier: {
@@ -503,7 +508,7 @@
                     },
                     img: "https://images.unsplash.com/photo-1611095973763-4140195a243e?auto=format&fit=crop&w=1200&q=80",
                     range: "14,260 km", cap: "Up to 19", speed: "Mach 0.925", body: { en: "Business Jet", tr: "İş Jeti" },
-                    videoUrl: "https://www.youtube.com/@eAviation12"
+                    videoUrl: "https://www.youtube.com/@EAviation_12"
                 }
             }
         };
