@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eAviation12 - Hub of Aviation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apple Tarzı Global Değişkenler ve eAviation12 Kimliği */
+        :root[data-theme="dark"] {
+            --bg-color: #000000;
+            --nav-bg: rgba(22, 22, 23, 0.8);
+            --text-color: #f5f5f7;
+            --text-secondary: #86868b;
+            --accent-color: #ff0000; /* YouTube Kırmızısı Dokunuşu */
+            --blue-accent: #2997ff;
+            --card-bg: #1d1d1f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --subnav-bg: rgba(29, 29, 31, 0.7);
+        }
+
+        :root[data-theme="light"] {
+            --bg-color: #f5f5f7;
+            --nav-bg: rgba(245, 245, 247, 0.8);
+            --text-color: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --accent-color: #e00000; 
+            --blue-accent: #0066cc;
+            --card-bg: #ffffff;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --subnav-bg: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* 1. KADEME: Ana Navigasyon */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 48px;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 19px;
+            letter-spacing: -0.5px;
+            cursor: pointer;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .brand-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .brand-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 13px;
+            opacity: 0.8;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .brand-link:hover, .brand-link.active {
+            opacity: 1;
+            color: var(--blue-accent);
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-control {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-control:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* 2. KADEME: Alt Navigasyon (Modeller) */
+        .sub-nav {
+            position: fixed;
+            top: 48px;
+            width: 100%;
+            background-color: var(--subnav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 999;
+            border-bottom: 1px solid var(--border-color);
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .sub-nav-container {
+            max-width: 1024px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 12px 20px;
+            overflow-x: auto;
+        }
+
+        .model-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 12px;
+            opacity: 0.7;
+            padding: 4px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .model-link:hover, .model-link.active {
+            opacity: 1;
+            background-color: var(--blue-accent);
+            color: #ffffff;
+        }
+
+        /* eAviation12 Ana Kanal Giriş Ekranı (Hero) */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, var(--card-bg) 0%, var(--bg-color) 70%);
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 15px;
+            background: linear-gradient(180deg, var(--text-color) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 22px;
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        /* Premium YouTube Yönlendirme Butonu */
+        .yt-button {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 12px 26px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
+        }
+
+        .yt-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.4);
+        }
+
+        /* Detaylı Ürün Sayfası */
+        .showcase {
+            min-height: 100vh;
+            padding-top: 120px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .image-viewport {
+            width: 100%;
+            max-width: 1100px;
+            height: 42vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .image-viewport img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 25px 50px rgba(0,0,0,0.3));
+            animation: scaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .details-container {
+            width: 100%;
+            max-width: 900px;
+            padding: 30px 20px;
+        }
+
+        .aircraft-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .aircraft-title {
+            font-size: 52px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .aircraft-tagline {
+            font-size: 20px;
+            color: var(--blue-accent);
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        .aircraft-desc {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-top: 15px;
+            text-align: justify;
+        }
+
+        /* Video İnceleme Butonu */
+        .video-link-container {
+            text-align: center;
+            margin: 20px 0 30px 0;
+        }
+
+        .btn-watch-video {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-watch-video:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: scale(1.02);
+        }
+
+        /* Teknik Kartlar */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .spec-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 18px;
+        }
+
+        .spec-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .spec-value {
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .brand-menu { display: none; }
+            .hero h1 { font-size: 38px; }
+            .hero p { font-size: 18px; }
+            .aircraft-title { font-size: 36px; }
+            .specs-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a class="logo" onclick="goHome()">eAviation<span>12</span></a>
+            <ul class="brand-menu">
+                <li><a class="brand-link" onclick="selectBrand('airbus')">Airbus</a></li>
+                <li><a class="brand-link" onclick="selectBrand('boeing')">Boeing</a></li>
+                <li><a class="brand-link" onclick="selectBrand('embraer')">Embraer</a></li>
+                <li><a class="brand-link" onclick="selectBrand('bombardier')">Bombardier</a></li>
+            </ul>
+            <div class="controls">
+                <button class="btn-control" id="langBtn" onclick="toggleLanguage()">TR</button>
+                <button class="btn-control" id="themeBtn" onclick="toggleTheme()">☀️</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sub-nav" id="subNav">
+        <div class="sub-nav-container" id="subnavLinks"></div>
+    </nav>
+
+    <section class="hero" id="heroSection">
+        <h1 id="heroTitle">Welcome to eAviation12</h1>
+        <p id="heroDesc">The ultimate digital hangar for aviation enthusiasts. Explore full technical metrics and flight review data.</p>
+        <a href="https://www.youtube.com/@eAviation12" target="_blank" class="yt-button" id="ytSubscribeBtn"> Subscribe on YouTube</a>
+    </section>
+
+    <section class="showcase" id="showcaseSection">
+        <div class="image-viewport">
+            <img id="airImage" src="" alt="Aircraft">
+        </div>
+        <div class="details-container">
+            <div class="aircraft-header">
+                <h2 class="aircraft-title" id="airTitle">Model Name</h2>
+                <div class="aircraft-tagline" id="airTagline">Tagline</div>
+                <p class="aircraft-desc" id="airDescription">Detailed description...</p>
+            </div>
+
+            <div class="video-link-container">
+                <a href="#" target="_blank" class="btn-watch-video" id="airVideoLink">
+                    ▶ <span id="lblWatchVideo">Watch the Video on eAviation12</span>
+                </a>
+            </div>
+
+            <div class="specs-grid">
+                <div class="spec-card">
+                    <div class="spec-label" id="lblRange">MAX RANGE</div>
+                    <div class="spec-value" id="valRange">-</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label" id="lblCap">PASSENGER CAPACITY</div>
+                    <div class="spec-value" id="valCap">-</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label" id="lblSpeed">CRUISE SPEED</div>
+                    <div class="spec-value" id="valSpeed">-</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label" id="lblStructure">FUSELAGE TYPE</div>
+                    <div class="spec-value" id="valStructure">-</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let currentLang = 'en';
+        let currentTheme = 'dark';
+        let activeBrand = '';
+
+        const uiText = {
+            en: {
+                heroTitle: "Welcome to eAviation12",
+                heroDesc: "The ultimate digital hangar for aviation enthusiasts. Explore full technical metrics and flight review data.",
+                ytBtn: " Subscribe on YouTube",
+                lblRange: "MAX RANGE",
+                lblCap: "PASSENGER CAPACITY",
+                lblSpeed: "CRUISE SPEED",
+                lblStructure: "FUSELAGE TYPE",
+                lblWatchVideo: "Watch the Video on eAviation12"
+            },
+            tr: {
+                heroTitle: "eAviation12'ye Hoş Geldiniz",
+                heroDesc: "Havacılık tutkunları için dijital hangar. Teknik verileri ve uçuş analizlerini Apple kalitesiyle keşfedin.",
+                ytBtn: " YouTube'da Abone Ol",
+                lblRange: "MAKSİMUM MENZİL",
+                lblCap: "YOLCU KAPASİTESİ",
+                lblSpeed: "SEYİR HIZI",
+                lblStructure: "GÖVDE YAPISI",
+                lblWatchVideo: "Videoyu eAviation12'de İzleyin"
+            }
+        };
+
+        // Her uçağın altına kendi kanalındaki ilgili videonun linkini "videoUrl" kısmına ekleyebilirsin!
+        const fleetData = {
+            airbus: {
+                a320: {
+                    name: "Airbus A320neo",
+                    tagline: { en: "Efficiency at its finest", tr: "Verimliliğin en saf hali" },
+                    desc: {
+                        en: "The A320neo Family incorporates the very latest technologies including generation engines and Sharklets, which together deliver at least 20% fuel savings.",
+                        tr: "A320neo ailesi, yeni nesil motorlar ve Sharklet kanat uçları dahil olmak üzere en son teknolojileri barındırarak %20 yakıt tasarrufu sağlar."
+                    },
+                    img: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=1200&q=80",
+                    range: "6,500 km", cap: "150 - 180", speed: "Mach 0.78", body: { en: "Single-Aisle", tr: "Dar Gövde" },
+                    videoUrl: "https://www.youtube.com/@eAviation12" // Buraya o uçakla ilgili videonun linkini koyabilirsin
+                },
+                a350: {
+                    name: "Airbus A350-900",
+                    tagline: { en: "The clean-sheet design icon", tr: "Sıfardan tasarlanan teknoloji ikonu" },
+                    desc: {
+                        en: "Shaping the future of air travel, Airbus A350 offers state-of-the-art aerodynamics, carbon-fibre fuselage and ultra-quiet cabin comfort.",
+                        tr: "Hava seyahatinin geleceğini şekillendiren A350, son teknoloji aerodinamik, karbon fiber gövde ve ultra sessiz kabin konforu sunar."
+                    },
+                    img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80",
+                    range: "15,000 km", cap: "300 - 350", speed: "Mach 0.85", body: { en: "Wide-Body", tr: "Geniş Gövde" },
+                    videoUrl: "https://www.youtube.com/@eAviation12"
+                }
+            },
+            boeing: {
+                b787: {
+                    name: "Boeing 787 Dreamliner",
+                    tagline: { en: "The dream of composite tech", tr: "Kompozit teknolojisinin rüyası" },
+                    desc: {
+                        en: "An operational gold standard crafted mainly from composite materials, offering lower cabin altitude pressure and larger smart windows.",
+                        tr: "Ağırlıklı olarak kompozit malzemelerden üretilen, daha düşük kabin irtifa basıncı ve daha büyük akıllı pencereler sunan operasyonel bir başyapıt."
+                    },
+                    img: "https://images.unsplash.com/photo-1517999144091-3d9dca6d1e43?auto=format&fit=crop&w=1200&q=80",
+                    range: "14,140 km", cap: "242 - 330", speed: "Mach 0.85", body: { en: "Wide-Body", tr: "Geniş Gövde" },
+                    videoUrl: "https://www.youtube.com/@eAviation12"
+                }
+            },
+            embraer: {
+                e195e2: {
+                    name: "Embraer E195-E2",
+                    tagline: { en: "The profit hunter", tr: "Kârlılık avcısı" },
+                    desc: {
+                        en: "The quietest and most efficient single-aisle aircraft in its segment, specifically engineered for regional optimization.",
+                        tr: "Segmentindeki en sessiz ve en verimli dar gövdeli uçak, bölgesel optimizasyon için özel olarak tasarlanmıştır."
+                    },
+                    img: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80",
+                    range: "4,815 km", cap: "120 - 146", speed: "Mach 0.78", body: { en: "Regional Jet", tr: "Bölgesel Jet" },
+                    videoUrl: "https://www.youtube.com/@eAviation12"
+                }
+            },
+            bombardier: {
+                global7500: {
+                    name: "Global 7500",
+                    tagline: { en: "Ultimate luxury business jet", tr: "Lüks iş jetlerinin zirvesi" },
+                    desc: {
+                        en: "The world's largest and longest-range business jet, offering four true living spaces and an industry-defining smooth ride.",
+                        tr: "Dört gerçek yaşam alanı ve sektör standartlarını belirleyen pürüzsüz uçuş deneyimi sunan dünyanın en büyük ve en uzun menzilli iş jeti."
+                    },
+                    img: "https://images.unsplash.com/photo-1611095973763-4140195a243e?auto=format&fit=crop&w=1200&q=80",
+                    range: "14,260 km", cap: "Up to 19", speed: "Mach 0.925", body: { en: "Business Jet", tr: "İş Jeti" },
+                    videoUrl: "https://www.youtube.com/@eAviation12"
+                }
+            }
+        };
+
+        function selectBrand(brandKey) {
+            activeBrand = brandKey;
+            document.querySelectorAll('.brand-link').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const subNav = document.getElementById('subNav');
+            const container = document.getElementById('subnavLinks');
+            container.innerHTML = '';
+
+            const models = fleetData[brandKey];
+            Object.keys(models).forEach(modelKey => {
+                const a = document.createElement('a');
+                a.className = 'model-link';
+                a.innerText = models[modelKey].name.split(' ')[1] || models[modelKey].name;
+                a.onclick = () => selectModel(modelKey);
+                container.appendChild(a);
+            });
+
+            subNav.style.display = 'block';
+            const firstModelKey = Object.keys(models)[0];
+            selectModel(firstModelKey);
+        }
+
+        function selectModel(modelKey) {
+            document.querySelectorAll('.model-link').forEach(el => el.classList.remove('active'));
+            if(event && event.target && event.target.className === 'model-link') {
+                event.target.classList.add('active');
+            } else {
+                if(document.getElementById('subnavLinks').firstChild) {
+                    document.getElementById('subnavLinks').firstChild.classList.add('active');
+                }
+            }
+
+            const ucak = fleetData[activeBrand][modelKey];
+
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('showcaseSection').style.display = 'flex';
+
+            document.getElementById('airImage').src = ucak.img;
+            document.getElementById('airTitle').innerText = ucak.name;
+            document.getElementById('airTagline').innerText = ucak.tagline[currentLang];
+            document.getElementById('airDescription').innerText = ucak.desc[currentLang];
+            document.getElementById('airVideoLink').href = ucak.videoUrl;
+            
+            document.getElementById('valRange').innerText = ucak.range;
+            document.getElementById('valCap').innerText = ucak.cap;
+            document.getElementById('valSpeed').innerText = ucak.speed;
+            document.getElementById('valStructure').innerText = typeof ucak.body === 'object' ? ucak.body[currentLang] : ucak.body;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            document.getElementById('heroSection').style.display = 'flex';
+            document.getElementById('showcaseSection').style.display = 'none';
+            document.getElementById('subNav').style.display = 'none';
+            document.querySelectorAll('.brand-link').forEach(el => el.classList.remove('active'));
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'tr' : 'en';
+            document.getElementById('langBtn').innerText = currentLang === 'en' ? 'TR' : 'EN';
+            
+            document.getElementById('heroTitle').innerText = uiText[currentLang].heroTitle;
+            document.getElementById('heroDesc').innerText = uiText[currentLang].heroDesc;
+            document.getElementById('ytSubscribeBtn').innerText = uiText[currentLang].ytBtn;
+            document.getElementById('lblRange').innerText = uiText[currentLang].lblRange;
+            document.getElementById('lblCap').innerText = uiText[currentLang].lblCap;
+            document.getElementById('lblSpeed').innerText = uiText[currentLang].lblSpeed;
+            document.getElementById('lblStructure').innerText = uiText[currentLang].lblStructure;
+            document.getElementById('lblWatchVideo').innerText = uiText[currentLang].lblWatchVideo;
+
+            const activeModelLink = document.querySelector('.model-link.active');
+            if (activeModelLink) {
+                const activeModelText = activeModelLink.innerText;
+                const brandModels = fleetData[activeBrand];
+                for(let key in brandModels) {
+                    if(brandModels[key].name.includes(activeModelText)) {
+                        selectModel(key);
+                        break;
+                    }
+                }
+            }
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            document.getElementById('themeBtn').innerText = currentTheme === 'dark' ? '☀️' : '🌙';
+        }
+    </script>
+</body>
+</html>
