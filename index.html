@@ -1,608 +1,372 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAviation_12 - Hub of Aviation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>EAviation | Youtube Channel</title>
+    <!-- Google Fonts & Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* Apple Tarzı Global Tasarım Çizgileri ve EAviation_12 Kimliği */
-        :root[data-theme="dark"] {
-            --bg-color: #000000;
-            --nav-bg: rgba(22, 22, 23, 0.8);
-            --text-color: #f5f5f7;
-            --text-secondary: #86868b;
-            --accent-color: #ff0000; /* Premium YouTube Kırmızısı */
-            --blue-accent: #2997ff;
-            --card-bg: #1d1d1f;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --subnav-bg: rgba(29, 29, 31, 0.7);
-        }
-
-        :root[data-theme="light"] {
-            --bg-color: #f5f5f7;
-            --nav-bg: rgba(245, 245, 247, 0.8);
-            --text-color: #1d1d1f;
-            --text-secondary: #6e6e73;
-            --accent-color: #e00000; 
-            --blue-accent: #0066cc;
-            --card-bg: #ffffff;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --subnav-bg: rgba(255, 255, 255, 0.7);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000000;
+            color: #f5f5f7;
             overflow-x: hidden;
         }
-
-        /* Üst Menü - 1. Aşama */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: var(--nav-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-color);
+        /* Apple Akıcı Cam Efekti */
+        .apple-glass {
+            background: rgba(22, 22, 23, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 48px;
-            padding: 0 20px;
+        .apple-card-glow:hover {
+            border-color: rgba(0, 113, 227, 0.4);
+            box-shadow: 0 0 30px rgba(0, 113, 227, 0.15);
         }
-
-        .logo {
-            font-weight: 700;
-            font-size: 19px;
-            letter-spacing: -0.5px;
-            cursor: pointer;
-            color: var(--text-color);
-            text-decoration: none;
+        /* Custom Gradients */
+        .bg-gradient-apple {
+            background: linear-gradient(135deg, #0071e3 0%, #30d158 100%);
         }
-        
-        .logo span {
-            color: var(--accent-color);
+        .smooth-transition {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .brand-menu {
-            display: flex;
-            list-style: none;
-            gap: 30px;
+        /* Radar Tarama Efekti */
+        @keyframes radar-sweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-
-        .brand-link {
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 13px;
-            opacity: 0.8;
-            font-weight: 500;
-            cursor: pointer;
+        .radar-line {
+            animation: radar-sweep 4s linear infinite;
+            transform-origin: bottom right;
         }
-
-        .brand-link:hover, .brand-link.active {
-            opacity: 1;
-            color: var(--blue-accent);
+        /* Arka Plan Işımaları */
+        .glow-1 {
+            position: absolute; width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(0,113,227,0.12) 0%, rgba(0,0,0,0) 70%);
+            top: -150px; left: 50%; transform: translateX(-50%); z-index: 0; pointer-events: none;
         }
-
-        .controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn-control {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-control:hover {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-        }
-
-        /* Alt Menü (Modeller) - 2. Aşama */
-        .sub-nav {
-            position: fixed;
-            top: 48px;
-            width: 100%;
-            background-color: var(--subnav-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 999;
-            border-bottom: 1px solid var(--border-color);
-            display: none;
-            animation: slideDown 0.3s ease;
-        }
-
-        .sub-nav-container {
-            max-width: 1024px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 12px 20px;
-            overflow-x: auto;
-        }
-
-        .model-link {
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 12px;
-            opacity: 0.7;
-            padding: 4px 12px;
-            border-radius: 20px;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .model-link:hover, .model-link.active {
-            opacity: 1;
-            background-color: var(--blue-accent);
-            color: #ffffff;
-        }
-
-        /* EAviation_12 Giriş (Hero) Alanı */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            background: radial-gradient(circle at center, var(--card-bg) 0%, var(--bg-color) 70%);
-        }
-
-        .hero h1 {
-            font-size: 64px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 15px;
-            background: linear-gradient(180deg, var(--text-color) 0%, var(--text-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 22px;
-            color: var(--text-secondary);
-            font-weight: 300;
-            max-width: 600px;
-            margin-bottom: 30px;
-        }
-
-        /* YouTube Abone Ol Butonu */
-        .yt-button {
-            display: inline-flex;
-            align-items: center;
-            background-color: var(--accent-color);
-            color: white;
-            text-decoration: none;
-            padding: 12px 26px;
-            border-radius: 30px;
-            font-size: 15px;
-            font-weight: 500;
-            letter-spacing: -0.01em;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
-        }
-
-        .yt-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.4);
-        }
-
-        /* Ürün Vitrini (Üstte Foto, Altta Bilgi) */
-        .showcase {
-            min-height: 100vh;
-            padding-top: 120px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .image-viewport {
-            width: 100%;
-            max-width: 1100px;
-            height: 42vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .image-viewport img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 25px 50px rgba(0,0,0,0.3));
-            animation: scaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .details-container {
-            width: 100%;
-            max-width: 900px;
-            padding: 30px 20px;
-        }
-
-        .aircraft-header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .aircraft-title {
-            font-size: 52px;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-        }
-
-        .aircraft-tagline {
-            font-size: 20px;
-            color: var(--blue-accent);
-            margin-top: 5px;
-            font-weight: 400;
-        }
-
-        .aircraft-desc {
-            font-size: 16px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-            margin-top: 15px;
-            text-align: justify;
-        }
-
-        /* YouTube İnceleme Butonu */
-        .video-link-container {
-            text-align: center;
-            margin: 20px 0 30px 0;
-        }
-
-        .btn-watch-video {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-watch-video:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            transform: scale(1.02);
-        }
-
-        /* Teknik Özellik Kartları */
-        .specs-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .spec-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 24px;
-            border-radius: 18px;
-        }
-
-        .spec-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        .spec-value {
-            font-size: 26px;
-            font-weight: 600;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes scaleUp {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
-            .brand-menu { display: none; }
-            .hero h1 { font-size: 38px; }
-            .hero p { font-size: 18px; }
-            .aircraft-title { font-size: 36px; }
-            .specs-grid { grid-template-columns: 1fr; }
+        .glow-2 {
+            position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(48,209,88,0.08) 0%, rgba(0,0,0,0) 70%);
+            bottom: 20%; right: -10%; z-index: 0; pointer-events: none;
         }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-blue-600 selection:text-white">
 
-    <!-- Üst Navigasyon Kontrolü -->
-    <header>
-        <div class="nav-container">
-            <a class="logo" onclick="goHome()">EAviation_<span>12</span></a>
-            <ul class="brand-menu">
-                <li><a class="brand-link" onclick="selectBrand('airbus')">Airbus</a></li>
-                <li><a class="brand-link" onclick="selectBrand('boeing')">Boeing</a></li>
-                <li><a class="brand-link" onclick="selectBrand('embraer')">Embraer</a></li>
-                <li><a class="brand-link" onclick="selectBrand('bombardier')">Bombardier</a></li>
-            </ul>
-            <div class="controls">
-                <button class="btn-control" id="langBtn" onclick="toggleLanguage()">TR</button>
-                <button class="btn-control" id="themeBtn" onclick="toggleTheme()">☀️</button>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+
+    <!-- 1. APPLE TARZI ULTRA SLIM NAV BAR -->
+    <nav class="fixed top-0 w-full z-50 apple-glass border-b border-white border-opacity-5 smooth-transition">
+        <div class="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between text-xs tracking-wider text-gray-400">
+            <a href="#" class="text-white text-sm font-bold tracking-tight flex items-center gap-2 smooth-transition hover:text-blue-500">
+                <i class="fa-solid fa-jet-fighter text-base text-blue-500"></i> EAviation <span class="text-[9px] px-1.5 py-0.5 rounded bg-white bg-opacity-10 text-gray-300 font-mono">GEOFS</span>
+            </a>
+            <div class="hidden md:flex space-x-8 font-light">
+                <a href="#home" class="hover:text-white smooth-transition">Hangar</a>
+                <a href="#live-feed" class="hover:text-white smooth-transition">Son Uçuş</a>
+                <a href="#fleet" class="hover:text-white smooth-transition font-medium text-blue-400">Sanal Filo</a>
+                <a href="#videos" class="hover:text-white smooth-transition">Uçuş Kayıtları</a>
+                <a href="#specs" class="hover:text-white smooth-transition">Sistem</a>
             </div>
+            <a href="https://www.youtube.com/@EAviation12" target="_blank" class="bg-blue-600 text-white px-3 py-1 rounded-full text-[11px] font-medium hover:bg-blue-500 smooth-transition shadow-lg flex items-center gap-1.5">
+                <i class="fa-brands fa-youtube"></i> Katıl
+            </a>
         </div>
-    </header>
-
-    <!-- Dinamik Alt Menü (Modeller) -->
-    <nav class="sub-nav" id="subNav">
-        <div class="sub-nav-container" id="subnavLinks"></div>
     </nav>
 
-    <!-- Ana Sayfa Karşılama Ekranı -->
-    <section class="hero" id="heroSection">
-        <h1 id="heroTitle">Welcome to EAviation_12</h1>
-        <p id="heroDesc">The official digital hangar for our YouTube aviation community. Explore full technical metrics and flight review data.</p>
-        <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="yt-button" id="ytSubscribeBtn"> Subscribe on YouTube</a>
-    </section>
-
-    <!-- Dinamik Üçak Gösterim Alanı -->
-    <section class="showcase" id="showcaseSection">
-        <div class="image-viewport">
-            <img id="airImage" src="" alt="Aircraft">
+    <!-- 2. HERO SECTION (KOKPİT ATMOSFERİ) -->
+    <section id="home" class="relative pt-40 pb-24 px-6 max-w-5xl mx-auto text-center z-10">
+        <!-- Kanal Profil Yuvası -->
+        <div class="relative w-32 h-32 mx-auto mb-10 rounded-[2rem] overflow-hidden shadow-2xl border border-white border-opacity-10 smooth-transition hover:scale-105 group bg-neutral-900">
+            <!-- NOT: Buraya Postimages veya yerel klasöründeki uçak/logo resmini koyabilirsin -->
+            <img src="https://images.pexels.com/photos/417192/pexels-photo-417192.jpeg?auto=compress&cs=tinysrgb&w=400" alt="EAviation HQ" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 smooth-transition bg-black bg-opacity-40">
+                <i class="fa-solid fa-tower-control-tower text-white text-2xl animate-pulse"></i>
+            </div>
         </div>
-        <div class="details-container">
-            <div class="aircraft-header">
-                <h2 class="aircraft-title" id="airTitle">Model Name</h2>
-                <div class="aircraft-tagline" id="airTagline">Tagline</div>
-                <p class="aircraft-desc" id="airDescription">Detailed description...</p>
-            </div>
 
-            <!-- YouTube Video Link Butonu -->
-            <div class="video-link-container">
-                <a href="https://www.youtube.com/@EAviation_12" target="_blank" class="btn-watch-video" id="airVideoLink">
-                    ▶ <span id="lblWatchVideo">Watch the Video on EAviation_12</span>
-                </a>
-            </div>
+        <!-- Üst Küçük Etiket -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-[10px] tracking-widest text-gray-400 uppercase mb-6 shadow-inner">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span> ATC ONLINE: RADAR ACTIVE
+        </div>
 
-            <div class="specs-grid">
-                <div class="spec-card">
-                    <div class="spec-label" id="lblRange">MAX RANGE</div>
-                    <div class="spec-value" id="valRange">-</div>
-                </div>
-                <div class="spec-card">
-                    <div class="spec-label" id="lblCap">PASSENGER CAPACITY</div>
-                    <div class="spec-value" id="valCap">-</div>
-                </div>
-                <div class="spec-card">
-                    <div class="spec-label" id="lblSpeed">CRUISE SPEED</div>
-                    <div class="spec-value" id="valSpeed">-</div>
-                </div>
-                <div class="spec-card">
-                    <div class="spec-label" id="lblStructure">FUSELAGE TYPE</div>
-                    <div class="spec-value" id="valStructure">-</div>
-                </div>
-            </div>
+        <h1 class="text-4xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white via-gray-200 to-gray-500 leading-tight">
+            Tarayıcıda Başlayan <br><span class="bg-clip-text text-transparent bg-gradient-apple">Sonsuz Havacılık.</span>
+        </h1>
+        
+        <p class="text-base md:text-xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed mb-12">
+            Masaüstünüzden gökyüzüne açılan en hafif kapı. <strong class="text-white font-medium">EAviation</strong>, GeoFS simülatörünün sınırlarını zorlayarak Airbus ve Boeing serilerinin aerodinamik detaylarını sinematik 4K kalitesiyle masanıza getiriyor.
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="#fleet" class="bg-gradient-apple text-white px-8 py-3.5 rounded-full text-sm font-medium smooth-transition hover:opacity-90 shadow-xl flex items-center gap-2">
+                <i class="fa-solid fa-plane"></i> Sanal Filoyu İncele
+            </a>
+            <a href="https://www.youtube.com/@EAviation12" target="_blank" class="apple-glass text-white px-8 py-3.5 rounded-full text-sm font-medium smooth-transition hover:bg-white hover:text-black flex items-center gap-2">
+                Resmi YouTube Kanalı <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-60"></i>
+            </a>
         </div>
     </section>
 
-    <!-- Veritabanı ve Çalışma Scripti -->
-    <script>
-        let currentLang = 'en';
-        let currentTheme = 'dark';
-        let activeBrand = '';
+    <!-- 3. CANLI / SON VİDEO ENTEGRASYON ALANI -->
+    <section id="live-feed" class="max-w-5xl mx-auto px-6 mb-28 relative z-10">
+        <div class="apple-glass p-6 md:p-8 rounded-3xl border border-white border-opacity-5 flex flex-col md:flex-row gap-8 items-center">
+            <div class="w-full md:w-1/2 aspect-video rounded-2xl overflow-hidden relative shadow-2xl group bg-neutral-900">
+                <!-- Video Görseli -->
+                <img src="https://images.pexels.com/photos/1004584/pexels-photo-1004584.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Son Video" class="w-full h-full object-cover smooth-transition group-hover:scale-105">
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                    <a href="https://www.youtube.com/watch?v=ChHgEv3fP-I" target="_blank" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center text-xl shadow-2xl transform transition duration-300 group-hover:scale-110">
+                        <i class="fa-solid fa-play ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 space-y-4">
+                <div class="flex items-center gap-2 font-mono text-[10px] text-blue-400 uppercase tracking-wider">
+                    <i class="fa-solid fa-circle-dot text-red-500 animate-pulse"></i> Son Yayınlanan Rapor
+                </div>
+                <h3 class="text-xl md:text-2xl font-semibold text-white tracking-tight">I landed with all Boeing Aircraft in GeoFS!</h3>
+                <p class="text-sm text-gray-400 font-light leading-relaxed">
+                    Yolcu uçaklarından kargo devlerine kadar tüm Boeing varyasyonlarının GeoFS fizik motorundaki rüzgâr ve yaklaşma tepkilerini tek bir uçuş günlüğünde topladık. Sert rüzgarlar ve tam otomasyon dışı inişler içerir.
+                </p>
+                <div class="pt-2 flex gap-6 text-xs text-gray-500 font-mono">
+                    <div><i class="fa-regular fa-clock mr-1"></i> 05:58</div>
+                    <div><i class="fa-solid fa-video mr-1"></i> 4K UHD</div>
+                    <div><i class="fa-solid fa-gauge-high mr-1"></i> 60 FPS</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        const uiText = {
-            en: {
-                heroTitle: "Welcome to EAviation_12",
-                heroDesc: "The official digital hangar for our YouTube aviation community. Explore full technical metrics and flight review data.",
-                ytBtn: " Subscribe on YouTube",
-                lblRange: "MAX RANGE",
-                lblCap: "PASSENGER CAPACITY",
-                lblSpeed: "CRUISE SPEED",
-                lblStructure: "FUSELAGE TYPE",
-                lblWatchVideo: "Watch the Video on EAviation_12"
-            },
-            tr: {
-                heroTitle: "EAviation_12'ye Hoş Geldiniz",
-                heroDesc: "YouTube havacılık topluluğumuzun resmi dijital hangarı. Teknik verileri ve uçuş analizlerini Apple kalitesiyle keşfedin.",
-                ytBtn: " YouTube'da Abone Ol",
-                lblRange: "MAKSİMUM MENZİL",
-                lblCap: "YOLCU KAPASİTESİ",
-                lblSpeed: "SEYİR HIZI",
-                lblStructure: "GÖVDE YAPISI",
-                lblWatchVideo: "Videoyu EAviation_12'de İzleyin"
-            }
-        };
+    <!-- 4. ETKİLEŞİMLİ SANAL FİLO (INTERACTIVE FLEET STATUS) -->
+    <section id="fleet" class="max-w-6xl mx-auto px-6 mb-28 relative z-10">
+        <div class="text-center md:text-left mb-12">
+            <h2 class="text-3xl font-bold tracking-tight text-white mb-2">EAviation Ana Sanal Filosu</h2>
+            <p class="text-sm text-gray-400 font-light">GeoFS simülasyonlarında aktif olarak test edilen ve kayıt altına alınan birincil gövdeler.</p>
+        </div>
 
-        const fleetData = {
-            airbus: {
-                a320: {
-                    name: "Airbus A320neo",
-                    tagline: { en: "Efficiency at its finest", tr: "Verimliliğin en saf hali" },
-                    desc: {
-                        en: "The A320neo Family incorporates the very latest technologies including generation engines and Sharklets, which together deliver at least 20% fuel savings.",
-                        tr: "A320neo ailesi, yeni nesil motorlar ve Sharklet kanat uçları dahil olmak üzere en son teknolojileri barındırarak %20 yakıt tasarrufu sağlar."
-                    },
-                    img: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=1200&q=80",
-                    range: "6,500 km", cap: "150 - 180", speed: "Mach 0.78", body: { en: "Single-Aisle", tr: "Dar Gövde" },
-                    videoUrl: "https://www.youtube.com/@EAviation_12"
-                },
-                a350: {
-                    name: "Airbus A350-900",
-                    tagline: { en: "The clean-sheet design icon", tr: "Sıfırdan tasarlanan teknoloji ikonu" },
-                    desc: {
-                        en: "Shaping the future of air travel, Airbus A350 offers state-of-the-art aerodynamics, carbon-fibre fuselage and ultra-quiet cabin comfort.",
-                        tr: "Hava seyahatinin geleceğini şekillendiren A350, son teknoloji aerodinamik, karbon fiber gövde ve ultra sessiz kabin konforu sunar."
-                    },
-                    img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80",
-                    range: "15,000 km", cap: "300 - 350", speed: "Mach 0.85", body: { en: "Wide-Body", tr: "Geniş Gövde" },
-                    videoUrl: "https://www.youtube.com/@EAviation_12"
-                }
-            },
-            boeing: {
-                b787: {
-                    name: "Boeing 787 Dreamliner",
-                    tagline: { en: "The dream of composite tech", tr: "Kompozit teknolojisinin rüyası" },
-                    desc: {
-                        en: "An operational gold standard crafted mainly from composite materials, offering lower cabin altitude pressure and larger smart windows.",
-                        tr: "Ağırlıklı olarak kompozit malzemelerden üretilen, daha düşük kabin irtifa basıncı ve daha büyük akıllı pencereler sunan operasyonel bir başyapıt."
-                    },
-                    img: "https://images.unsplash.com/photo-1517999144091-3d9dca6d1e43?auto=format&fit=crop&w=1200&q=80",
-                    range: "14,140 km", cap: "242 - 330", speed: "Mach 0.85", body: { en: "Wide-Body", tr: "Geniş Gövde" },
-                    videoUrl: "https://www.youtube.com/@EAviation_12"
-                }
-            },
-            embraer: {
-                e195e2: {
-                    name: "Embraer E195-E2",
-                    tagline: { en: "The profit hunter", tr: "Kârlılık avcısı" },
-                    desc: {
-                        en: "The quietest and most efficient single-aisle aircraft in its segment, specifically engineered for regional optimization.",
-                        tr: "Segmentindeki en sessiz ve en verimli dar gövdeli uçak, bölgesel optimizasyon için özel olarak tasarlanmıştır."
-                    },
-                    img: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80",
-                    range: "4,815 km", cap: "120 - 146", speed: "Mach 0.78", body: { en: "Regional Jet", tr: "Bölgesel Jet" },
-                    videoUrl: "https://www.youtube.com/@EAviation_12"
-                }
-            },
-            bombardier: {
-                global7500: {
-                    name: "Global 7500",
-                    tagline: { en: "Ultimate luxury business jet", tr: "Lüks iş jetlerinin zirvesi" },
-                    desc: {
-                        en: "The world's largest and longest-range business jet, offering four true living spaces and an industry-defining smooth ride.",
-                        tr: "Dört gerçek yaşam alanı ve sektör standartlarını belirleyen pürüzsüz uçuş deneyimi sunan dünyanın en büyük ve en uzun menzilli iş jeti."
-                    },
-                    img: "https://images.unsplash.com/photo-1611095973763-4140195a243e?auto=format&fit=crop&w=1200&q=80",
-                    range: "14,260 km", cap: "Up to 19", speed: "Mach 0.925", body: { en: "Business Jet", tr: "İş Jeti" },
-                    videoUrl: "https://www.youtube.com/@EAviation_12"
-                }
-            }
-        };
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Uçak Kartı 1 -->
+            <div class="apple-glass p-6 rounded-2xl border border-white border-opacity-5 smooth-transition apple-card-glow flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono bg-blue-500 bg-opacity-10 text-blue-400 px-2 py-0.5 rounded">HEAVY</span>
+                        <i class="fa-solid fa-plane-up text-gray-600 text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-1">Boeing 777-300ER</h4>
+                    <p class="text-xs text-gray-400 font-light mb-4">Kanalın en çok tercih edilen uzun menzil geniş gövde simülasyon aracı.</p>
+                </div>
+                <div class="border-t border-neutral-800 pt-4 space-y-2 font-mono text-[11px] text-gray-500">
+                    <div class="flex justify-between"><span>Kararlılık:</span> <span class="text-green-400">9.2 / 10</span></div>
+                    <div class="flex justify-between"><span>Tercih Oranı:</span> <span class="text-white">%45</span></div>
+                </div>
+            </div>
 
-        function selectBrand(brandKey) {
-            activeBrand = brandKey;
-            document.querySelectorAll('.brand-link').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
+            <!-- Uçak Kartı 2 -->
+            <div class="apple-glass p-6 rounded-2xl border border-white border-opacity-5 smooth-transition apple-card-glow flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono bg-green-500 bg-opacity-10 text-green-400 px-2 py-0.5 rounded">SUPER</span>
+                        <i class="fa-solid fa-plane-up text-gray-600 text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-1">Airbus A380-800</h4>
+                    <p class="text-xs text-gray-400 font-light mb-4">GeoFS fiziklerindeki devasa kanat alanı ve usta iniş varyasyonları.</p>
+                </div>
+                <div class="border-t border-neutral-800 pt-4 space-y-2 font-mono text-[11px] text-gray-500">
+                    <div class="flex justify-between"><span>Kararlılık:</span> <span class="text-yellow-400">7.8 / 10</span></div>
+                    <div class="flex justify-between"><span>Tercih Oranı:</span> <span class="text-white">%30</span></div>
+                </div>
+            </div>
 
-            const subNav = document.getElementById('subNav');
-            const container = document.getElementById('subnavLinks');
-            container.innerHTML = '';
+            <!-- Uçak Kartı 3 -->
+            <div class="apple-glass p-6 rounded-2xl border border-white border-opacity-5 smooth-transition apple-card-glow flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono bg-purple-500 bg-opacity-10 text-purple-400 px-2 py-0.5 rounded">MID-SIZE</span>
+                        <i class="fa-solid fa-plane-up text-gray-600 text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-1">Boeing 737-800</h4>
+                    <p class="text-xs text-gray-400 font-light mb-4">Kısa ve orta mesafe dar gövde uçuşlarında rüzgarlı yaklaşma kralı.</p>
+                </div>
+                <div class="border-t border-neutral-800 pt-4 space-y-2 font-mono text-[11px] text-gray-500">
+                    <div class="flex justify-between"><span>Kararlılık:</span> <span class="text-green-400">9.5 / 10</span></div>
+                    <div class="flex justify-between"><span>Tercih Oranı:</span> <span class="text-white">%15</span></div>
+                </div>
+            </div>
 
-            const models = fleetData[brandKey];
-            Object.keys(models).forEach(modelKey => {
-                const a = document.createElement('a');
-                a.className = 'model-link';
-                a.innerText = models[modelKey].name.split(' ')[1] || models[modelKey].name;
-                a.onclick = () => selectModel(modelKey);
-                container.appendChild(a);
-            });
+            <!-- Uçak Kartı 4 -->
+            <div class="apple-glass p-6 rounded-2xl border border-white border-opacity-5 smooth-transition apple-card-glow flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono bg-red-500 bg-opacity-10 text-red-400 px-2 py-0.5 rounded">REGIONAL</span>
+                        <i class="fa-solid fa-plane-up text-gray-600 text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-1">Airbus A320neo</h4>
+                    <p class="text-xs text-gray-400 font-light mb-4">Fly-by-wire sisteminin GeoFS üzerindeki tepkilerini ölçen ana gövde.</p>
+                </div>
+                <div class="border-t border-neutral-800 pt-4 space-y-2 font-mono text-[11px] text-gray-500">
+                    <div class="flex justify-between"><span>Kararlılık:</span> <span class="text-green-400">8.9 / 10</span></div>
+                    <div class="flex justify-between"><span>Tercih Oranı:</span> <span class="text-white">%10</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            subNav.style.display = 'block';
-            const firstModelKey = Object.keys(models)[0];
-            selectModel(firstModelKey);
-        }
+    <!-- 5. UÇUŞ KAYITLARI (GENİŞLETİLMİŞ VİDEO ARŞİVİ) -->
+    <section id="videos" class="max-w-6xl mx-auto px-6 mb-28 relative z-10">
+        <div class="flex items-baseline justify-between mb-10 border-b border-neutral-900 pb-4">
+            <h2 class="text-2xl font-bold tracking-tight text-white">Öne Çıkan Dijital Seferler</h2>
+            <a href="https://www.youtube.com/@EAviation12" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 smooth-transition flex items-center gap-1">
+                Tüm Veri Tabanı <i class="fa-solid fa-angle-right"></i>
+            </a>
+        </div>
 
-        function selectModel(modelKey) {
-            document.querySelectorAll('.model-link').forEach(el => el.classList.remove('active'));
-            if(event && event.target && event.target.className === 'model-link') {
-                event.target.classList.add('active');
-            } else {
-                if(document.getElementById('subnavLinks').firstChild) {
-                    document.getElementById('subnavLinks').firstChild.classList.add('active');
-                }
-            }
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Video Kart 1 -->
+            <div class="apple-glass rounded-3xl overflow-hidden group smooth-transition hover:-translate-y-2 shadow-2xl">
+                <div class="relative aspect-video overflow-hidden bg-neutral-900">
+                    <img src="https://images.pexels.com/photos/2011383/pexels-photo-2011383.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Airbus Video" class="w-full h-full object-cover smooth-transition group-hover:scale-105">
+                    <span class="absolute bottom-3 right-3 bg-black bg-opacity-70 font-mono text-[10px] px-2 py-0.5 rounded text-white">5:46</span>
+                </div>
+                <div class="p-6">
+                    <div class="text-[10px] uppercase font-mono tracking-widest text-green-400 mb-2">AIRBUS SERIES</div>
+                    <h3 class="text-base font-semibold text-white mb-2 group-hover:text-blue-400 smooth-transition">I landed with all Airbus aircraft in GeoFS!</h3>
+                    <p class="text-xs text-gray-400 font-light leading-relaxed">A320'den dünyanın en büyük yolcu uçağı A380'e kadar tüm Airbus serisinin simülatör rüzgar direnç testleri.</p>
+                </div>
+            </div>
 
-            const ucak = fleetData[activeBrand][modelKey];
+            <!-- Video Kart 2 -->
+            <div class="apple-glass rounded-3xl overflow-hidden group smooth-transition hover:-translate-y-2 shadow-2xl">
+                <div class="relative aspect-video overflow-hidden bg-neutral-900">
+                    <img src="https://images.pexels.com/photos/358312/pexels-photo-358312.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Planespotting Video" class="w-full h-full object-cover smooth-transition group-hover:scale-105">
+                    <span class="absolute bottom-3 right-3 bg-black bg-opacity-70 font-mono text-[10px] px-2 py-0.5 rounded text-white">3:35</span>
+                </div>
+                <div class="p-6">
+                    <div class="text-[10px] uppercase font-mono tracking-widest text-purple-400 mb-2">CINEMATIC OBSERVER</div>
+                    <h3 class="text-base font-semibold text-white mb-2 group-hover:text-blue-400 smooth-transition">4K Quality Planespotting in GeoFS</h3>
+                    <p class="text-xs text-gray-400 font-light leading-relaxed">Sanal havacılıkta estetik arayanlar için ultra grafik ayarlarında gün batımı uçak gözlemciliği seansı.</p>
+                </div>
+            </div>
 
-            document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('showcaseSection').style.display = 'flex';
+            <!-- Video Kart 3 -->
+            <!-- İleride yükleyeceğin yeni konsept bir video yeri tutucusu -->
+            <div class="apple-glass rounded-3xl overflow-hidden group smooth-transition hover:-translate-y-2 shadow-2xl border-dashed border-2 border-neutral-800 bg-transparent flex flex-col justify-center items-center p-8 text-center min-h-[300px]">
+                <div class="w-12 h-12 rounded-full bg-neutral-900 flex items-center justify-center mb-4 text-gray-500 border border-neutral-800">
+                    <i class="fa-solid fa-plus text-lg"></i>
+                </div>
+                <h4 class="text-sm font-semibold text-white mb-1">Yeni Uçuş Planı Yükleniyor</h4>
+                <p class="text-xs text-gray-500 font-light max-w-[200px]">Çok yakında yepyeni bir GeoFS meydan okuması bu alanda olacak.</p>
+            </div>
+        </div>
+    </section>
 
-            document.getElementById('airImage').src = ucak.img;
-            document.getElementById('airTitle').innerText = ucak.name;
-            document.getElementById('airTagline').innerText = ucak.tagline[currentLang];
-            document.getElementById('airDescription').innerText = ucak.desc[currentLang];
-            document.getElementById('airVideoLink').href = ucak.videoUrl;
+    <!-- 6. ULTRA DETAY: SİMÜLATÖR RADAR & COCKPIT SPECS PANELİ -->
+    <section id="specs" class="max-w-5xl mx-auto px-6 mb-28 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            document.getElementById('valRange').innerText = ucak.range;
-            document.getElementById('valCap').innerText = ucak.cap;
-            document.getElementById('valSpeed').innerText = ucak.speed;
-            document.getElementById('valStructure').innerText = typeof ucak.body === 'object' ? ucak.body[currentLang] : ucak.body;
+            <!-- Sol Panel: Sanal Radar Ekranı Görsel Öğesi -->
+            <div class="apple-glass p-6 rounded-3xl border border-white border-opacity-5 flex flex-col justify-between items-center relative overflow-hidden h-80">
+                <div class="w-full flex justify-between font-mono text-[10px] text-gray-500 z-10">
+                    <span>SECTOR: DELTA-006</span>
+                    <span class="text-green-400">SCANNING...</span>
+                </div>
+                
+                <!-- Dairesel Radar Grafik Alanı -->
+                <div class="w-40 h-40 rounded-full border border-green-500 border-opacity-20 relative flex items-center justify-center z-10">
+                    <div class="absolute inset-4 rounded-full border border-green-500 border-opacity-10"></div>
+                    <div class="absolute inset-10 rounded-full border border-green-500 border-opacity-5"></div>
+                    <!-- Radar Çizgisi -->
+                    <div class="absolute inset-0 rounded-full overflow-hidden">
+                        <div class="w-1/2 h-1/2 border-r border-green-500 border-opacity-40 radar-line absolute bottom-1/2 right-1/2 bg-gradient-to-tl from-green-500 from-opacity-5 to-transparent"></div>
+                    </div>
+                    <!-- Temsili Hedef Noktalar -->
+                    <span class="absolute w-1 h-1 bg-green-400 rounded-full top-10 left-12 animate-ping"></span>
+                    <span class="absolute w-1 h-1 bg-green-400 rounded-full bottom-14 right-10 opacity-70"></span>
+                    <i class="fa-solid fa-crosshairs text-green-500 opacity-20 text-xl"></i>
+                </div>
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+                <div class="text-center font-mono text-xs text-gray-400 z-10">
+                    <i class="fa-solid fa-satellite-dish text-green-400 mr-1"></i> GeoFS Global Server Tracking
+                </div>
+            </div>
 
-        function goHome() {
-            document.getElementById('heroSection').style.display = 'flex';
-            document.getElementById('showcaseSection').style.display = 'none';
-            document.getElementById('subNav').style.display = 'none';
-            document.querySelectorAll('.brand-link').forEach(el => el.classList.remove('active'));
-        }
+            <!-- Sağ Geniş Panel: Kayıt İstasyonu Özellikleri -->
+            <div class="apple-glass p-8 rounded-3xl border border-white border-opacity-5 md:col-span-2 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-2">Simülasyon ve Kayıt Altyapısı</h3>
+                    <p class="text-xs text-gray-400 font-light leading-relaxed mb-6">
+                        Videolarımızın pürüzsüz, takılmasız ve gerçekçi motor sesleriyle size ulaşması için tarayıcı optimizasyonları ve özel görüntü yakalama donanımları kullanıyoruz.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white bg-opacity-5 p-4 rounded-xl">
+                        <div class="text-xs text-gray-500 font-mono mb-1">エンジン Engine</div>
+                        <div class="text-sm font-semibold text-white">GeoFS Physics 3.2</div>
+                    </div>
+                    <div class="bg-white bg-opacity-5 p-4 rounded-xl">
+                        <div class="text-xs text-gray-500 font-mono mb-1">çözünürlük Res</div>
+                        <div class="text-sm font-semibold text-blue-400">2160p 4K Ultra HD</div>
+                    </div>
+                    <div class="bg-white bg-opacity-5 p-4 rounded-xl">
+                        <div class="text-xs text-gray-500 font-mono mb-1">Akıcılık Smooth</div>
+                        <div class="text-sm font-semibold text-green-400">60 FPS Stable V-Sync</div>
+                    </div>
+                    <div class="bg-white bg-opacity-5 p-4 rounded-xl">
+                        <div class="text-xs text-gray-500 font-mono mb-1">Ses Seslendirme</div>
+                        <div class="text-sm font-semibold text-white">Stereo Cockpit Audio</div>
+                    </div>
+                </div>
+            </div>
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'tr' : 'en';
-            document.getElementById('langBtn').innerText = currentLang === 'en' ? 'TR' : 'EN';
-            
-            document.getElementById('heroTitle').innerText = uiText[currentLang].heroTitle;
-            document.getElementById('heroDesc').innerText = uiText[currentLang].heroDesc;
-            document.getElementById('ytSubscribeBtn').innerText = uiText[currentLang].ytBtn;
-            document.getElementById('lblRange').innerText = uiText[currentLang].lblRange;
-            document.getElementById('lblCap').innerText = uiText[currentLang].lblCap;
-            document.getElementById('lblSpeed').innerText = uiText[currentLang].lblSpeed;
-            document.getElementById('lblStructure').innerText = uiText[currentLang].lblStructure;
-            document.getElementById('lblWatchVideo').innerText = uiText[currentLang].lblWatchVideo;
+        </div>
+    </section>
 
-            const activeModelLink = document.querySelector('.model-link.active');
-            if (activeModelLink) {
-                const activeModelText = activeModelLink.innerText;
-                const brandModels = fleetData[activeBrand];
-                for(let key in brandModels) {
-                    if(brandModels[key].name.includes(activeModelText)) {
-                        selectModel(key);
-                        break;
-                    }
-                }
-            }
-        }
+    <!-- 7. FOOTER (GELİŞMİŞ APPLE ALT BİLGİSİ) -->
+    <footer class="border-t border-neutral-900 bg-black pt-16 pb-12 text-xs text-gray-500 font-light relative z-10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="space-y-3">
+                    <h4 class="text-white font-semibold text-sm">EAviation</h4>
+                    <p class="text-gray-400 leading-relaxed">GeoFS uçuş simülatöründe dijital havacılığın sınırlarını zorlayan bağımsız video üretim istasyonu.</p>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="text-white font-semibold">Uçuş Hatları</h4>
+                    <ul class="space-y-1.5 text-gray-400">
+                        <li><a href="#fleet" class="hover:text-white smooth-transition">Boeing Serisi</a></li>
+                        <li><a href="#fleet" class="hover:text-white smooth-transition">Airbus Serisi</a></li>
+                        <li><a href="#videos" class="hover:text-white smooth-transition">Planespotting Sinematikleri</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="text-white font-semibold">Simülatör Bağlantıları</h4>
+                    <ul class="space-y-1.5 text-gray-400">
+                        <li><a href="https://www.geo-fs.com" target="_blank" class="hover:text-white smooth-transition">GeoFS Resmi Sitesi</a></li>
+                        <li><a href="https://www.geo-fs.com/maps/geofs.php" target="_blank" class="hover:text-white smooth-transition">Canlı Hava Trafik Haritası</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="text-white font-semibold">Ağımıza Katılın</h4>
+                    <div class="flex space-x-4 text-lg">
+                        <a href="https://www.youtube.com/@EAviation12" target="_blank" class="text-gray-400 hover:text-red-500 smooth-transition"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white smooth-transition"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 smooth-transition"><i class="fa-solid fa-paper-plane"></i></a>
+                    </div>
+                </div>
+            </div>
 
-        function toggleTheme() {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            document.getElementById('themeBtn').innerText = currentTheme === 'dark' ? '☀️' : '🌙';
-        }
-    </script>
+            <div class="border-t border-neutral-950 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600">
+                <p>&copy; 2026 EAviation. Tüm Dijital Hakları Saklıdır.</p>
+                <p class="font-mono text-[10px]">FLIGHT LEVEL 410 // HEAVY RADAR CONNECTED</p>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
